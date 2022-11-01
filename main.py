@@ -10,32 +10,50 @@ class Window(QMainWindow):
     def __init__(self):
         super(Window, self).__init__()
         self.setMinimumSize(300, 150)
-        uic.loadUi('D:\\dev\\Python\\Projects\\Audioplayer\\resources\\ui\\MainWindow.ui', self)
+        uic.loadUi('resources\\ui\\MainWindow.ui', self)
         self.file_path = None
         self.player = QMediaPlayer()
-        self.play_button.clicked.connect(self.play)
-        self.prev_button.clicked.connect(self.pause)
-        self.next_button.clicked.connect(self.resume)
+        self.main_button.clicked.connect(self.invoke_play_function)
+        self.like_button.clicked.connect(self.sizes)
         self.volume_slider.valueChanged.connect(self.change_volume)
         self.open_file_action.triggered.connect(self.open_file)
         self.error_label.hide()
 
-    def play(self):
+    def invoke_play_function(self):
         if self.file_path is None:
             self.error_label.show()
         else:
             self.error_label.hide()
-            url = QUrl.fromLocalFile(self.file_path)
-            self.player.setMedia(QMediaContent(url))
-            self.player.play()
+            button_text = self.main_button.text()
+            if button_text == 'Play':
+                self.play()
+            elif button_text == 'Pause':
+                self.pause()
+            elif button_text == 'Resume':
+                self.resume()
+
+    def sizes(self):
+        # TODO delete this func later
+        w = self.frameGeometry().width()
+        h = self.frameGeometry().height()
+        self.setWindowTitle(f'{w}, {h}')
+
+    def play(self):
+        url = QUrl.fromLocalFile(self.file_path)
+        self.player.setMedia(QMediaContent(url))
+        self.main_button.setText('Pause')
+        self.player.play()
 
     def pause(self):
+        self.main_button.setText('Resume')
         self.player.pause()
 
     def resume(self):
+        self.main_button.setText('Pause')
         self.player.play()
 
     def change_volume(self, value):
+        # TODO delete 'print'
         print(value)
         self.player.setVolume(value)
 
