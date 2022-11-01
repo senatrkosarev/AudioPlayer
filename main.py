@@ -6,7 +6,11 @@ from PyQt5.QtGui import QPixmap, QImage, QIcon
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog
 
+from image import find_average_color
 
+
+# FIXME
+# - Metadata loading bug
 class Window(QMainWindow):
     def __init__(self):
         super(Window, self).__init__()
@@ -34,8 +38,6 @@ class Window(QMainWindow):
             if state == QMediaPlayer.StoppedState:
                 self.play()
                 self.load_metadata()
-                self.load_metadata()
-                print('try 2 times')
             elif state == QMediaPlayer.PlayingState:
                 self.pause()
                 self.load_metadata()
@@ -100,6 +102,10 @@ class Window(QMainWindow):
             self.image.setPixmap(QPixmap.fromImage(QImage('resources\\default.png')))
         else:
             self.image.setPixmap(QPixmap.fromImage(image.scaled(420, 420)))
+
+        self.image.pixmap().toImage().save('resources\\temp.png')
+        colors = find_average_color('resources\\temp.png')
+        self.setStyleSheet(f'background-color: rgb({colors[0]}, {colors[1]}, {colors[2]});')
 
 
 if __name__ == '__main__':
