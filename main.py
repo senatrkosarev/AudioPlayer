@@ -1,21 +1,23 @@
 import sys
 
+from PyQt5 import uic
 from PyQt5.QtCore import QUrl
-from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtGui import QPixmap, QImage, QIcon
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog
 
-from resources.ui.MainWindow import Ui_MainWindow
 
-
-class Window(QMainWindow, Ui_MainWindow):
+class Window(QMainWindow):
     def __init__(self):
-        super().__init__()
-        self.setupUi(self)
+        super(Window, self).__init__()
+        uic.loadUi('resources\\ui\\MainWindow.ui', self)
+        self.setMinimumSize(420, 540)
+        self.title_label.hide()
+        self.author_label.hide()
+        self.image.setPixmap(QPixmap.fromImage(QImage('resources\\default.png')))
 
         self.file_path = None
         self.player = QMediaPlayer()
-        self.image.setPixmap(QPixmap.fromImage(QImage('resources\\default.png')))
 
         self.main_button.clicked.connect(self.invoke_play_function)
         self.like_button.clicked.connect(self.sizes)
@@ -28,15 +30,21 @@ class Window(QMainWindow, Ui_MainWindow):
             self.error_label.show()
         else:
             self.error_label.hide()
-            button_text = self.main_button.text()
-            if button_text == 'Play':
+            state = self.player.state()
+            if state == QMediaPlayer.StoppedState:
                 self.play()
                 self.load_metadata()
-            elif button_text == 'Pause':
+                self.load_metadata()
+                print('try 2 times')
+            elif state == QMediaPlayer.PlayingState:
                 self.pause()
                 self.load_metadata()
-            elif button_text == 'Resume':
+            elif state == QMediaPlayer.PausedState:
                 self.resume()
+
+    def end_of_media(self):
+        self.main_button.setIcon(QIcon('resources\\icons\\play.svg'))
+        self.file_path = None
 
     def sizes(self):
         # TODO delete this func later
@@ -47,16 +55,16 @@ class Window(QMainWindow, Ui_MainWindow):
     def play(self):
         url = QUrl.fromLocalFile(self.file_path)
         self.player.setMedia(QMediaContent(url))
-        self.main_button.setText('Pause')
+        self.main_button.setIcon(QIcon('resources\\icons\\pause.svg'))
         self.player.play()
 
     def pause(self):
-        self.main_button.setText('Resume')
         self.player.pause()
+        self.main_button.setIcon(QIcon('resources\\icons\\play.svg'))
 
     def resume(self):
-        self.main_button.setText('Pause')
         self.player.play()
+        self.main_button.setIcon(QIcon('resources\\icons\\pause.svg'))
 
     def change_volume(self, value):
         # TODO delete 'print'
@@ -66,8 +74,10 @@ class Window(QMainWindow, Ui_MainWindow):
     def open_file(self):
         self.file_path = \
             QFileDialog.getOpenFileName(self, 'Select audio file', '', 'Audio (*.mp3 *.wav);;All files (*)')[0]
+        if self.file_path == '':
+            self.file_path = None
         self.player.stop()
-        self.main_button.setText('Play')
+        self.main_button.setIcon(QIcon('resources\\icons\\play.svg'))
 
     def load_metadata(self):
         if not self.player.isMetaDataAvailable():
@@ -81,13 +91,15 @@ class Window(QMainWindow, Ui_MainWindow):
             self.title_label.setText(self.file_path[self.file_path.rfind('/') + 1:])
         else:
             self.title_label.setText(title)
+        self.title_label.show()
 
         self.author_label.setText(', '.join(authors) if authors else 'Unknown author')
+        self.author_label.show()
 
         if image is None:
             self.image.setPixmap(QPixmap.fromImage(QImage('resources\\default.png')))
         else:
-            self.image.setPixmap(QPixmap.fromImage(image))
+            self.image.setPixmap(QPixmap.fromImage(image.scaled(420, 420)))
 
 
 if __name__ == '__main__':
