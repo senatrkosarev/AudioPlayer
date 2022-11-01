@@ -16,5 +16,4 @@ def find_average_color(image_path: str):
     for i in range(3):
         if result[i] > 170 and sum(result) > 510:
             result[i] -= 50
-    print(result)
     return result

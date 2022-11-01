@@ -69,8 +69,6 @@ class Window(QMainWindow):
         self.main_button.setIcon(QIcon('resources\\icons\\pause.svg'))
 
     def change_volume(self, value):
-        # TODO delete 'print'
-        print(value)
         self.player.setVolume(value)
 
     def open_file(self):
