@@ -2,6 +2,7 @@ import sys
 
 from PyQt5 import uic
 from PyQt5.QtCore import QUrl
+from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog
 
@@ -27,8 +28,10 @@ class Window(QMainWindow):
             button_text = self.main_button.text()
             if button_text == 'Play':
                 self.play()
+                self.load_metadata()
             elif button_text == 'Pause':
                 self.pause()
+                self.load_metadata()
             elif button_text == 'Resume':
                 self.resume()
 
@@ -60,6 +63,28 @@ class Window(QMainWindow):
     def open_file(self):
         self.file_path = \
             QFileDialog.getOpenFileName(self, 'Select audio file', '', 'Audio (*.mp3 *.wav);;All files (*)')[0]
+        self.player.stop()
+        self.main_button.setText('Play')
+
+    def load_metadata(self):
+        if not self.player.isMetaDataAvailable():
+            return
+
+        title = self.player.metaData('Title')
+        authors = self.player.metaData('Author')
+        image = self.player.metaData('ThumbnailImage')
+
+        if title is None:
+            self.title_label.setText(self.file_path[self.file_path.rfind('/') + 1:])
+        else:
+            self.title_label.setText(title)
+
+        self.author_label.setText(', '.join(authors) if authors else 'Unknown author')
+
+        if image is None:
+            self.image.setPixmap(QPixmap.fromImage(QImage('resources\\default.png')))
+        else:
+            self.image.setPixmap(QPixmap.fromImage(image.scaled(512, 512)))
 
 
 if __name__ == '__main__':

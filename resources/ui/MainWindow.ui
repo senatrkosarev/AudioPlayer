@@ -32,11 +32,11 @@
       <property name="autoFillBackground">
        <bool>false</bool>
       </property>
+      <property name="styleSheet">
+       <string notr="true">border-radius: 5;</string>
+      </property>
       <property name="text">
        <string/>
-      </property>
-      <property name="pixmap">
-       <pixmap>../default.png</pixmap>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -51,6 +51,12 @@
     </item>
     <item>
      <widget class="QLabel" name="title_label">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="text">
        <string>TextLabel</string>
       </property>
