@@ -1,19 +1,22 @@
 import sys
 
-from PyQt5 import uic
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog
 
+from resources.ui.MainWindow import Ui_MainWindow
 
-class Window(QMainWindow):
+
+class Window(QMainWindow, Ui_MainWindow):
     def __init__(self):
-        super(Window, self).__init__()
-        self.setMinimumSize(300, 150)
-        uic.loadUi('resources\\ui\\MainWindow.ui', self)
+        super().__init__()
+        self.setupUi(self)
+
         self.file_path = None
         self.player = QMediaPlayer()
+        self.image.setPixmap(QPixmap.fromImage(QImage('resources\\default.png')))
+
         self.main_button.clicked.connect(self.invoke_play_function)
         self.like_button.clicked.connect(self.sizes)
         self.volume_slider.valueChanged.connect(self.change_volume)
@@ -84,7 +87,7 @@ class Window(QMainWindow):
         if image is None:
             self.image.setPixmap(QPixmap.fromImage(QImage('resources\\default.png')))
         else:
-            self.image.setPixmap(QPixmap.fromImage(image.scaled(512, 512)))
+            self.image.setPixmap(QPixmap.fromImage(image))
 
 
 if __name__ == '__main__':
