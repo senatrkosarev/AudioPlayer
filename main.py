@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog
 from tinytag import TinyTag
 
 from image import find_average_color, save_audio_image
+from database import AudiofileDao, UserDao
 
 
 class Window(QMainWindow):
@@ -22,16 +23,29 @@ class Window(QMainWindow):
         self.playlist = []
         self.current_audio_index = 0
         self.player = QMediaPlayer()
+        self.audio_dao = AudiofileDao()
 
-        self.dislike_button.clicked.connect(self.print_playlist)
         self.main_button.clicked.connect(self.invoke_play_function)
-        self.like_button.clicked.connect(self.sizes)
+        self.like_button.clicked.connect(self.like)
+        self.dislike_button.clicked.connect(self.dislike)
         self.volume_slider.valueChanged.connect(self.change_volume)
         self.open_file_action.triggered.connect(self.open_file)
         self.open_folder_action.triggered.connect(self.open_folder)
         self.next_button.clicked.connect(self.next)
         self.prev_button.clicked.connect(self.previous)
         self.error_label.hide()
+
+    def like(self):
+        try:
+            self.audio_dao.save(1, self.title_label.text(), self.playlist[self.current_audio_index])
+        except IndexError:
+            pass
+
+    def dislike(self):
+        try:
+            self.audio_dao.delete(self.playlist[self.current_audio_index])
+        except IndexError:
+            pass
 
     def next(self):
         if len(self.playlist) > 1:
