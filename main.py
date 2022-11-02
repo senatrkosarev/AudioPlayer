@@ -34,7 +34,28 @@ class Window(QMainWindow):
         self.open_folder_action.triggered.connect(self.open_folder)
         self.next_button.clicked.connect(self.next)
         self.prev_button.clicked.connect(self.previous)
+        self.song_slider.sliderReleased.connect(self.slider_released)
         self.error_label.hide()
+
+        self.timer = QtCore.QTimer(self)
+        self.timer.timeout.connect(self.update_slider)
+        self.timer.start(1000)
+    def update_slider(self):
+        if self.player.state() == QMediaPlayer.PlayingState:
+            self.song_slider.setMinimum(0)
+            self.song_slider.setMaximum(self.player.duration())
+            self.song_slider.setValue(self.song_slider.value() + 1000)
+            self.update_time()
+
+    def update_time(self):
+        pos = self.player.position()
+        current_time = str(f'{int(pos / 60000)}:{int((pos / 1000) % 60):02}')
+        self.time_current.setText(current_time)
+        print(pos)
+
+    def slider_released(self):
+        self.player.setPosition(self.song_slider.value())
+        self.update_time()
 
     def like(self):
         try:
@@ -50,6 +71,8 @@ class Window(QMainWindow):
 
     def next(self):
         if len(self.playlist) > 1:
+            self.song_slider.setSliderPosition(0)
+            self.update_time()
             self.current_audio_index += 1
             self.current_audio_index %= len(self.playlist)
             self.load_metadata()
@@ -57,12 +80,15 @@ class Window(QMainWindow):
 
     def previous(self):
         if len(self.playlist) > 1:
+            self.song_slider.setSliderPosition(0)
+            self.update_time()
             self.current_audio_index -= 1
             self.current_audio_index %= len(self.playlist)
             self.load_metadata()
             self.play()
 
     def invoke_play_function(self):
+        print(self.player.state())
         if not self.playlist:
             self.error_label.show()
         else:
@@ -90,6 +116,7 @@ class Window(QMainWindow):
         self.player.setMedia(QMediaContent(url))
         self.main_button.setIcon(QIcon('resources\\icons\\pause.svg'))
         self.player.play()
+        self.song_slider.setSliderPosition(0)
         self.image.show()
 
     def pause(self):
@@ -126,6 +153,7 @@ class Window(QMainWindow):
             self.playlist.append(iterator.next())
         if len(self.playlist) != 0:
             self.load_metadata()
+            self.update_slider()
         else:
             self.image.hide()
             self.title_label.setText('')
@@ -152,6 +180,11 @@ class Window(QMainWindow):
         else:
             save_audio_image(image)
             self.image.setPixmap(QPixmap.fromImage(QImage('resources\\temp.png')))
+
+        # current_time = str(f'{int(pos / 60000)}:{int((pos / 1000) % 60):02}')
+        print('AAAAAAAAAA', tag.duration)
+        duration = str(f'{int(tag.duration / 60)}:{int(tag.duration % 60):02}')
+        self.time_end.setText(str(duration))
 
         self.image.pixmap().toImage().save('resources\\temp.png')
         colors = find_average_color('resources\\temp.png')
