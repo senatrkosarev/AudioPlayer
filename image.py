@@ -1,3 +1,5 @@
+import io
+
 from PIL import Image
 
 
@@ -17,3 +19,8 @@ def find_average_color(image_path: str):
         if result[i] > 170 and sum(result) > 510:
             result[i] -= 50
     return result
+
+
+def save_audio_image(image: str):
+    img = Image.open(io.BytesIO(image))
+    img.save('resources\\temp.png')

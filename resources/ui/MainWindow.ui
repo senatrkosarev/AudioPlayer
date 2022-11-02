@@ -22,6 +22,12 @@
     <height>500</height>
    </size>
   </property>
+  <property name="maximumSize">
+   <size>
+    <width>490</width>
+    <height>775</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Audioplayer</string>
   </property>
@@ -56,6 +62,7 @@
      <widget class="QLabel" name="title_label">
       <property name="font">
        <font>
+        <pointsize>10</pointsize>
         <weight>75</weight>
         <bold>true</bold>
        </font>
@@ -73,6 +80,11 @@
     </item>
     <item>
      <widget class="QLabel" name="author_label">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="styleSheet">
        <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
@@ -116,7 +128,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_3">
+       <widget class="QPushButton" name="dislike_button">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
@@ -148,7 +160,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="prev_button">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
@@ -218,7 +230,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="next_button">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
@@ -306,17 +318,53 @@
      </layout>
     </item>
     <item>
-     <widget class="QSlider" name="volume_slider">
-      <property name="sliderPosition">
-       <number>99</number>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="tickPosition">
-       <enum>QSlider::NoTicks</enum>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QSlider" name="volume_slider">
+        <property name="sliderPosition">
+         <number>99</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::NoTicks</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="QLabel" name="error_label">
@@ -346,15 +394,19 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>466</width>
+     <width>420</width>
      <height>26</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <widget class="QMenu" name="menuOpen">
     <property name="title">
      <string>Open</string>
     </property>
     <addaction name="open_file_action"/>
+    <addaction name="open_folder_action"/>
    </widget>
    <addaction name="menuOpen"/>
   </widget>
@@ -369,7 +421,12 @@
   </action>
   <action name="open_file_action">
    <property name="text">
-    <string>Open file</string>
+    <string>Open File</string>
+   </property>
+  </action>
+  <action name="open_folder_action">
+   <property name="text">
+    <string>Open Folder</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
