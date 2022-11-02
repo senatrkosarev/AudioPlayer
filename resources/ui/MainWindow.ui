@@ -131,7 +131,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="time_current">
+       <widget class="QLabel" name="current_time_label">
         <property name="styleSheet">
          <string notr="true">color: rgb(255, 255, 255);</string>
         </property>
@@ -151,7 +151,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="time_end">
+       <widget class="QLabel" name="end_time_label">
         <property name="styleSheet">
          <string notr="true">color: rgb(255, 255, 255);</string>
         </property>

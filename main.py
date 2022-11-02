@@ -26,6 +26,7 @@ class Window(QMainWindow):
         self.audio_dao = AudiofileDao()
 
         self.volume_widget = None
+        self.player.mediaStatusChanged.connect(self.end_of_media)
         self.main_button.clicked.connect(self.invoke_play_function)
         self.like_button.clicked.connect(self.like)
         self.dislike_button.clicked.connect(self.dislike)
@@ -40,6 +41,7 @@ class Window(QMainWindow):
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.update_slider)
         self.timer.start(1000)
+
     def update_slider(self):
         if self.player.state() == QMediaPlayer.PlayingState:
             self.song_slider.setMinimum(0)
@@ -50,8 +52,7 @@ class Window(QMainWindow):
     def update_time(self):
         pos = self.player.position()
         current_time = str(f'{int(pos / 60000)}:{int((pos / 1000) % 60):02}')
-        self.time_current.setText(current_time)
-        print(pos)
+        self.current_time_label.setText(current_time)
 
     def slider_released(self):
         self.player.setPosition(self.song_slider.value())
@@ -87,8 +88,18 @@ class Window(QMainWindow):
             self.load_metadata()
             self.play()
 
+    def end_of_media(self):
+        current_time = self.current_time_label.text()
+        end_time = self.end_time_label.text()
+        if self.player.state() == QMediaPlayer.StoppedState and current_time[:-1] == end_time[:-1]:
+            if len(self.playlist) > 1:
+                self.next()
+            else:
+                path = self.playlist[self.current_audio_index]
+                self.stop()
+                self.playlist.append(path)
+
     def invoke_play_function(self):
-        print(self.player.state())
         if not self.playlist:
             self.error_label.show()
         else:
@@ -182,9 +193,8 @@ class Window(QMainWindow):
             self.image.setPixmap(QPixmap.fromImage(QImage('resources\\temp.png')))
 
         # current_time = str(f'{int(pos / 60000)}:{int((pos / 1000) % 60):02}')
-        print('AAAAAAAAAA', tag.duration)
         duration = str(f'{int(tag.duration / 60)}:{int(tag.duration % 60):02}')
-        self.time_end.setText(str(duration))
+        self.end_time_label.setText(str(duration))
 
         self.image.pixmap().toImage().save('resources\\temp.png')
         colors = find_average_color('resources\\temp.png')
