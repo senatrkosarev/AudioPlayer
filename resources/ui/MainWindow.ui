@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>420</width>
-    <height>540</height>
+    <width>407</width>
+    <height>525</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -318,6 +318,19 @@
      </layout>
     </item>
     <item>
+     <spacer name="verticalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <spacer name="horizontalSpacer_3">
@@ -329,17 +342,39 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>70</width>
           <height>20</height>
          </size>
         </property>
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="effects_button">
+        <property name="icon">
+         <iconset>
+          <normaloff>../icons/effects.svg</normaloff>../icons/effects.svg</iconset>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="volume_button">
         <property name="icon">
          <iconset>
           <normaloff>../icons/volume.svg</normaloff>../icons/volume.svg</iconset>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="playlist_button">
+        <property name="icon">
+         <iconset>
+          <normaloff>../icons/playlist.svg</normaloff>../icons/playlist.svg</iconset>
         </property>
         <property name="flat">
          <bool>true</bool>
@@ -356,7 +391,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>70</width>
           <height>20</height>
          </size>
         </property>
@@ -392,7 +427,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>420</width>
+     <width>407</width>
      <height>26</height>
     </rect>
    </property>
