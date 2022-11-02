@@ -1,10 +1,10 @@
 import sys
 
-from PyQt5 import uic
+from PyQt5 import uic, QtCore
 from PyQt5.QtCore import QUrl, QDirIterator
-from PyQt5.QtGui import QPixmap, QImage, QIcon
+from PyQt5.QtGui import QPixmap, QImage, QIcon, QPalette
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QWidget
 from tinytag import TinyTag
 
 from image import find_average_color, save_audio_image
@@ -25,10 +25,11 @@ class Window(QMainWindow):
         self.player = QMediaPlayer()
         self.audio_dao = AudiofileDao()
 
+        self.volume_widget = None
         self.main_button.clicked.connect(self.invoke_play_function)
         self.like_button.clicked.connect(self.like)
         self.dislike_button.clicked.connect(self.dislike)
-        self.volume_slider.valueChanged.connect(self.change_volume)
+        self.volume_button.clicked.connect(self.open_volume_widget)
         self.open_file_action.triggered.connect(self.open_file)
         self.open_folder_action.triggered.connect(self.open_folder)
         self.next_button.clicked.connect(self.next)
@@ -104,9 +105,6 @@ class Window(QMainWindow):
         self.playlist.clear()
         self.main_button.setIcon(QIcon('resources\\icons\\play.svg'))
 
-    def change_volume(self, value):
-        self.player.setVolume(value)
-
     def open_file(self):
         file_path = \
             QFileDialog.getOpenFileName(self, 'Select audio file', '', 'Audio (*.mp3 *.wav);;All files (*)')[0]
@@ -158,6 +156,29 @@ class Window(QMainWindow):
         self.image.pixmap().toImage().save('resources\\temp.png')
         colors = find_average_color('resources\\temp.png')
         self.setStyleSheet(f'background-color: rgb({colors[0]}, {colors[1]}, {colors[2]});')
+
+    def open_volume_widget(self):
+        x = self.x()
+        y = self.y() + self.height() + 40
+        color = self.palette().color(QPalette.Background)
+        self.volume_widget = VolumeWidget(self.player, x, y, color)
+        self.volume_widget.show()
+
+
+class VolumeWidget(QWidget):
+    def __init__(self, player, x, y, color):
+        super(VolumeWidget, self).__init__()
+        uic.loadUi('resources\\ui\\Volume.ui', self)
+        self.move(x, y)
+        self.setStyleSheet(f'background-color: rgb({color.red()}, {color.green()}, {color.blue()});')
+
+        self.player = player
+        self.volume_slider.setValue(self.player.volume())
+        self.volume_slider.valueChanged.connect(self.change_volume)
+        QtCore.QTimer.singleShot(10000, self.close)
+
+    def change_volume(self, value):
+        self.player.setVolume(value)
 
 
 def except_hook(cls, exception, traceback):

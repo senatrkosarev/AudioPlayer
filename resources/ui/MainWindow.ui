@@ -336,15 +336,13 @@
        </spacer>
       </item>
       <item>
-       <widget class="QSlider" name="volume_slider">
-        <property name="sliderPosition">
-         <number>99</number>
+       <widget class="QPushButton" name="volume_button">
+        <property name="icon">
+         <iconset>
+          <normaloff>../icons/volume.svg</normaloff>../icons/volume.svg</iconset>
         </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::NoTicks</enum>
+        <property name="flat">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
