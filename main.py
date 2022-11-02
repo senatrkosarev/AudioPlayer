@@ -192,8 +192,7 @@ class Window(QMainWindow):
             save_audio_image(image)
             self.image.setPixmap(QPixmap.fromImage(QImage('resources\\temp.png')))
 
-        # current_time = str(f'{int(pos / 60000)}:{int((pos / 1000) % 60):02}')
-        duration = str(f'{int(tag.duration / 60)}:{int(tag.duration % 60):02}')
+        duration = str(f'{int(tag.duration / 60)}:{int(tag.duration % 60) + 1:02}')
         self.end_time_label.setText(str(duration))
 
         self.image.pixmap().toImage().save('resources\\temp.png')
