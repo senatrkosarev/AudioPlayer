@@ -160,8 +160,13 @@ class Window(QMainWindow):
         self.setStyleSheet(f'background-color: rgb({colors[0]}, {colors[1]}, {colors[2]});')
 
 
+def except_hook(cls, exception, traceback):
+    sys.__excepthook__(cls, exception, traceback)
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = Window()
     window.show()
+    sys.excepthook = except_hook
     sys.exit(app.exec())
