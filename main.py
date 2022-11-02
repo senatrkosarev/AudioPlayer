@@ -201,7 +201,7 @@ class Window(QMainWindow):
 class VolumeWidget(QWidget):
     def __init__(self, player, x, y, color):
         super(VolumeWidget, self).__init__()
-        uic.loadUi('resources\\ui\\Volume.ui', self)
+        uic.loadUi('resources\\ui\\VolumeWidget.ui', self)
         self.move(x, y)
         self.setStyleSheet(f'background-color: rgb({color.red()}, {color.green()}, {color.blue()});')
 
