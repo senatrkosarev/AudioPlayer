@@ -211,9 +211,10 @@ class Window(QMainWindow):
 
     def open_volume_widget(self):
         x = self.x()
-        y = self.y() + self.height() + 40
+        y = self.y() + self.height() + 80
+        width = self.width()
         color = self.palette().color(QPalette.Background)
-        self.volume_widget = VolumeWidget(self.player, x, y, color)
+        self.volume_widget = VolumeWidget(self.player, x, y, width, color)
         self.volume_widget.show()
 
     def open_properties_widget(self):
@@ -264,10 +265,10 @@ class PropertiesWidget(QWidget):
 
 
 class VolumeWidget(QWidget):
-    def __init__(self, player, x, y, color):
+    def __init__(self, player, x, y, width, color):
         super(VolumeWidget, self).__init__()
         uic.loadUi('resources\\ui\\VolumeWidget.ui', self)
-        self.move(x, y)
+        self.setGeometry(x, y, width, self.height())
         self.setStyleSheet(f'background-color: rgb({color.red()}, {color.green()}, {color.blue()});')
 
         self.player = player
