@@ -533,8 +533,15 @@
     </property>
     <addaction name="properties_action"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="about_action"/>
+   </widget>
    <addaction name="menuOpen"/>
    <addaction name="menuTrack"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action">
@@ -561,6 +568,14 @@
   <action name="properties_action">
    <property name="text">
     <string>Properties</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="about_action">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>

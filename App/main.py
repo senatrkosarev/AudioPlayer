@@ -1,4 +1,5 @@
 import sys
+import webbrowser
 
 from PyQt5 import uic, QtCore
 from PyQt5.QtCore import QUrl, QDirIterator
@@ -27,6 +28,7 @@ class Window(QMainWindow):
 
         self.volume_widget = None
         self.properties_widget = None
+        self.about_widget = None
         self.player.mediaStatusChanged.connect(self.end_of_media)
         self.main_button.clicked.connect(self.invoke_play_function)
         self.like_button.clicked.connect(self.like)
@@ -35,6 +37,7 @@ class Window(QMainWindow):
         self.open_file_action.triggered.connect(self.open_file)
         self.open_folder_action.triggered.connect(self.open_folder)
         self.properties_action.triggered.connect(self.open_properties_widget)
+        self.about_action.triggered.connect(self.open_about_widget)
         self.next_button.clicked.connect(self.next)
         self.prev_button.clicked.connect(self.previous)
         self.song_slider.sliderReleased.connect(self.slider_released)
@@ -225,6 +228,10 @@ class Window(QMainWindow):
             self.properties_widget = PropertiesWidget(x, y, height, file_path)
             self.properties_widget.show()
 
+    def open_about_widget(self):
+        self.about_widget = AboutWidget()
+        self.about_widget.show()
+
 
 class PropertiesWidget(QWidget):
     def __init__(self, x, y, height, file_path):
@@ -270,6 +277,14 @@ class VolumeWidget(QWidget):
 
     def change_volume(self, value):
         self.player.setVolume(value)
+
+
+class AboutWidget(QWidget):
+    def __init__(self):
+        super(AboutWidget, self).__init__()
+        uic.loadUi('resources\\ui\\AboutWidget.ui', self)
+        self.setFixedSize(430, 330)
+        self.github_button.clicked.connect(lambda: webbrowser.open('https://github.com/skosarex/AudioPlayer'))
 
 
 def except_hook(cls, exception, traceback):
