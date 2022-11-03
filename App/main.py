@@ -178,17 +178,18 @@ class Window(QMainWindow):
 
         title = tag.title
         if title is None:
-            title = file_path[file_path.rfind('/') + 1:]
-            if len(title) > 35:
-                self.title_label.setText(title[0:35] + '...')
-            else:
-                self.title_label.setText(title)
-        else:
-            self.title_label.setText(title)
+            title = title = file_path[file_path.rfind('/') + 1:]
+        if len(title) > 35:
+            title = title[0:35] + '...'
+        self.title_label.setText(title)
         self.title_label.show()
 
         authors = tag.artist
-        self.author_label.setText(', '.join(authors.split('/')) if authors else 'Unknown author')
+        if authors:
+            authors = ', '.join(authors.split('/'))
+            if len(authors) > 35:
+                authors = authors[0:35] + '...'
+        self.author_label.setText(authors if authors else 'Unknown author')
         self.author_label.show()
 
         image = tag.get_image()
