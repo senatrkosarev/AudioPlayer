@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Volume</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../icons/volume_black.svg</normaloff>../icons/volume_black.svg</iconset>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">

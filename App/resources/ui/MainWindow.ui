@@ -29,7 +29,11 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Audioplayer</string>
+   <string>Shuffle</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../icons/logo.svg</normaloff>../icons/logo.svg</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: rgb(150, 141, 181);</string>
