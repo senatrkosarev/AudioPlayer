@@ -21,7 +21,6 @@ class Window(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(Window, self).__init__()
         self.setupUi(self)
-        self.setMinimumSize(420, 540)
         self.title_label.hide()
         self.author_label.hide()
         self.image.setPixmap(QPixmap.fromImage(QImage('resources\\default.png')))
@@ -36,7 +35,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.about_widget = None
         self.player.mediaStatusChanged.connect(self.end_of_media)
         self.main_button.clicked.connect(self.invoke_play_function)
-        self.like_button.clicked.connect(self.like)
+        self.like_button.clicked.connect(self.sizes)
         self.dislike_button.clicked.connect(self.dislike)
         self.volume_button.clicked.connect(self.open_volume_widget)
         self.open_file_action.triggered.connect(self.open_file)

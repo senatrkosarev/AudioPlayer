@@ -17,7 +17,7 @@ class Ui_VolumeWidget(object):
         VolumeWidget.resize(420, 70)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("../icons/volume_black.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        VolumeWidget.setWindowIcon(icon)
+        VolumeWidget.setWindowIcon(QtGui.QIcon('resources\\icons\\volume_black.svg'))
         self.verticalLayout = QtWidgets.QVBoxLayout(VolumeWidget)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
