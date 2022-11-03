@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>407</width>
-    <height>525</height>
+    <width>420</width>
+    <height>540</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>300</width>
-    <height>500</height>
+    <width>420</width>
+    <height>540</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -513,7 +513,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>407</width>
+     <width>420</width>
      <height>26</height>
     </rect>
    </property>

@@ -1,7 +1,7 @@
 import sys
 import webbrowser
 
-from PyQt5 import uic, QtCore
+from PyQt5 import QtCore
 from PyQt5.QtCore import QUrl, QDirIterator
 from PyQt5.QtGui import QPixmap, QImage, QIcon, QPalette
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
@@ -11,11 +11,16 @@ from tinytag import TinyTag
 from image import find_average_color, save_audio_image
 from database import AudiofileDao, UserDao
 
+from resources.ui.MainWindow import Ui_MainWindow
+from resources.ui.VolumeWidget import Ui_VolumeWidget
+from resources.ui.PropertiesWidget import Ui_PropertiesWidget
+from resources.ui.AboutWidget import Ui_AboutWidget
 
-class Window(QMainWindow):
+
+class Window(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(Window, self).__init__()
-        uic.loadUi('resources\\ui\\MainWindow.ui', self)
+        self.setupUi(self)
         self.setMinimumSize(420, 540)
         self.title_label.hide()
         self.author_label.hide()
@@ -46,6 +51,9 @@ class Window(QMainWindow):
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.update_slider)
         self.timer.start(1000)
+
+    def init_ui(self):
+        pass
 
     def update_slider(self):
         if self.player.state() == QMediaPlayer.PlayingState:
@@ -234,10 +242,10 @@ class Window(QMainWindow):
         self.about_widget.show()
 
 
-class PropertiesWidget(QWidget):
+class PropertiesWidget(QWidget, Ui_PropertiesWidget):
     def __init__(self, x, y, height, file_path):
         super(PropertiesWidget, self).__init__()
-        uic.loadUi('resources\\ui\\PropertiesWidget.ui', self)
+        self.setupUi(self)
         self.setGeometry(x, y, self.width(), height)
         self.file_path = file_path
         self.load_properties()
@@ -264,10 +272,10 @@ class PropertiesWidget(QWidget):
         self.file_text.setText(self.file_path)
 
 
-class VolumeWidget(QWidget):
+class VolumeWidget(QWidget, Ui_VolumeWidget):
     def __init__(self, player, x, y, width, color):
         super(VolumeWidget, self).__init__()
-        uic.loadUi('resources\\ui\\VolumeWidget.ui', self)
+        self.setupUi(self)
         self.setGeometry(x, y, width, self.height())
         self.setStyleSheet(f'background-color: rgb({color.red()}, {color.green()}, {color.blue()});')
 
@@ -280,10 +288,10 @@ class VolumeWidget(QWidget):
         self.player.setVolume(value)
 
 
-class AboutWidget(QWidget):
+class AboutWidget(QWidget, Ui_AboutWidget):
     def __init__(self):
         super(AboutWidget, self).__init__()
-        uic.loadUi('resources\\ui\\AboutWidget.ui', self)
+        self.setupUi(self)
         self.setFixedSize(430, 330)
         self.github_button.clicked.connect(lambda: webbrowser.open('https://github.com/skosarex/AudioPlayer'))
 
