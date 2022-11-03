@@ -26,6 +26,7 @@ class Window(QMainWindow):
         self.audio_dao = AudiofileDao()
 
         self.volume_widget = None
+        self.properties_widget = None
         self.player.mediaStatusChanged.connect(self.end_of_media)
         self.main_button.clicked.connect(self.invoke_play_function)
         self.like_button.clicked.connect(self.like)
@@ -33,6 +34,7 @@ class Window(QMainWindow):
         self.volume_button.clicked.connect(self.open_volume_widget)
         self.open_file_action.triggered.connect(self.open_file)
         self.open_folder_action.triggered.connect(self.open_folder)
+        self.properties_action.triggered.connect(self.open_properties_widget)
         self.next_button.clicked.connect(self.next)
         self.prev_button.clicked.connect(self.previous)
         self.song_slider.sliderReleased.connect(self.slider_released)
@@ -176,7 +178,11 @@ class Window(QMainWindow):
 
         title = tag.title
         if title is None:
-            self.title_label.setText(file_path[file_path.rfind('/') + 1:])
+            title = file_path[file_path.rfind('/') + 1:]
+            if len(title) > 35:
+                self.title_label.setText(title[0:35] + '...')
+            else:
+                self.title_label.setText(title)
         else:
             self.title_label.setText(title)
         self.title_label.show()
@@ -205,6 +211,48 @@ class Window(QMainWindow):
         color = self.palette().color(QPalette.Background)
         self.volume_widget = VolumeWidget(self.player, x, y, color)
         self.volume_widget.show()
+
+    def open_properties_widget(self):
+        if len(self.playlist) == 0:
+            self.error_label.show()
+        else:
+            self.error_label.hide()
+            x = self.x() + self.width() + 10
+            y = self.y() + 37
+            height = self.height()
+            file_path = self.playlist[self.current_audio_index]
+            self.properties_widget = PropertiesWidget(x, y, height, file_path)
+            self.properties_widget.show()
+
+
+class PropertiesWidget(QWidget):
+    def __init__(self, x, y, height, file_path):
+        super(PropertiesWidget, self).__init__()
+        uic.loadUi('resources\\ui\\PropertiesWidget.ui', self)
+        self.setGeometry(x, y, self.width(), height)
+        self.file_path = file_path
+        self.load_properties()
+
+    def load_properties(self):
+        tag = TinyTag.get(self.file_path)
+
+        title = tag.title
+        authors = tag.artist
+        album = tag.album
+        genre = tag.genre
+        year = tag.year
+        length = str(f'{int(tag.duration / 60)}:{int(tag.duration % 60) + 1:02}')
+
+        self.title_text.setText(title)
+        try:
+            self.author_text.setText(', '.join(authors.split('/')))
+        except AttributeError:
+            pass
+        self.album_text.setText(album)
+        self.genre_text.setText(genre)
+        self.year_text.setText(year)
+        self.length_text.setText(length)
+        self.file_text.setText(self.file_path)
 
 
 class VolumeWidget(QWidget):
