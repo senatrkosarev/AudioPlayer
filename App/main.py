@@ -1,41 +1,39 @@
 import sys
-import webbrowser
 
 from PyQt5 import QtCore
-from PyQt5.QtCore import QUrl, QDirIterator
 from PyQt5.QtGui import QPixmap, QImage, QIcon, QPalette
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QWidget
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog
 from tinytag import TinyTag
 
 from image import find_average_color, save_audio_image
 from database import AudiofileDao, UserDao
-
 from resources.ui.MainWindow import Ui_MainWindow
-from resources.ui.VolumeWidget import Ui_VolumeWidget
-from resources.ui.PropertiesWidget import Ui_PropertiesWidget
-from resources.ui.AboutWidget import Ui_AboutWidget
+from widgets import VolumeWidget, PropertiesWidget, AboutWidget
+
+PLAY_ICON = QIcon('resources\\icons\\play.svg')
+PAUSE_ICON = QIcon('resources\\icons\\pause.svg')
+DEFAULT_IMAGE = QImage('resources\\default.png')
+NO_FILE_ERROR = 'Ошибка: не выбран файл!'
 
 
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(Window, self).__init__()
         self.setupUi(self)
-        self.title_label.hide()
-        self.author_label.hide()
-        self.image.setPixmap(QPixmap.fromImage(QImage('resources\\default.png')))
 
         self.playlist = []
-        self.current_audio_index = 0
+        self.cursor = 0  # current audio index in playlist
         self.player = QMediaPlayer()
         self.audio_dao = AudiofileDao()
+        self.timer = QtCore.QTimer(self)
+        self.timer.start(1000)
 
-        self.volume_widget = None
-        self.properties_widget = None
-        self.about_widget = None
+        self.timer.timeout.connect(self.update_slider)
+        self.timer.timeout.connect(self.update_time)
         self.player.mediaStatusChanged.connect(self.end_of_media)
-        self.main_button.clicked.connect(self.invoke_play_function)
-        self.like_button.clicked.connect(self.sizes)
+        self.main_button.clicked.connect(self.select_func)
+        self.like_button.clicked.connect(self.like)
         self.dislike_button.clicked.connect(self.dislike)
         self.volume_button.clicked.connect(self.open_volume_widget)
         self.open_file_action.triggered.connect(self.open_file)
@@ -45,21 +43,12 @@ class Window(QMainWindow, Ui_MainWindow):
         self.next_button.clicked.connect(self.next)
         self.prev_button.clicked.connect(self.previous)
         self.song_slider.sliderReleased.connect(self.slider_released)
-        self.error_label.hide()
-
-        self.timer = QtCore.QTimer(self)
-        self.timer.timeout.connect(self.update_slider)
-        self.timer.start(1000)
-
-    def init_ui(self):
-        pass
 
     def update_slider(self):
         if self.player.state() == QMediaPlayer.PlayingState:
             self.song_slider.setMinimum(0)
             self.song_slider.setMaximum(self.player.duration())
             self.song_slider.setValue(self.song_slider.value() + 1000)
-            self.update_time()
 
     def update_time(self):
         pos = self.player.position()
@@ -72,33 +61,25 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def like(self):
         try:
-            self.audio_dao.save(1, self.title_label.text(), self.playlist[self.current_audio_index])
+            self.audio_dao.save(1, self.title_label.text(), self.playlist[self.cursor])
         except IndexError:
             pass
 
     def dislike(self):
         try:
-            self.audio_dao.delete(self.playlist[self.current_audio_index])
+            self.audio_dao.delete(self.playlist[self.cursor])
         except IndexError:
             pass
 
     def next(self):
-        if len(self.playlist) > 1:
-            self.song_slider.setSliderPosition(0)
-            self.update_time()
-            self.current_audio_index += 1
-            self.current_audio_index %= len(self.playlist)
-            self.load_metadata()
-            self.play()
+        self.cursor = (self.cursor + 1) % len(self.playlist)
+        self.load_metadata()
+        self.play()
 
     def previous(self):
-        if len(self.playlist) > 1:
-            self.song_slider.setSliderPosition(0)
-            self.update_time()
-            self.current_audio_index -= 1
-            self.current_audio_index %= len(self.playlist)
-            self.load_metadata()
-            self.play()
+        self.cursor = (self.cursor - 1) % len(self.playlist)
+        self.load_metadata()
+        self.play()
 
     def end_of_media(self):
         current_time = self.current_time_label.text()
@@ -107,53 +88,49 @@ class Window(QMainWindow, Ui_MainWindow):
             if len(self.playlist) > 1:
                 self.next()
             else:
-                path = self.playlist[self.current_audio_index]
-                self.stop()
-                self.playlist.append(path)
-
-    def invoke_play_function(self):
-        if not self.playlist:
-            self.error_label.show()
-        else:
-            self.error_label.hide()
-            state = self.player.state()
-            if state == QMediaPlayer.StoppedState:
                 self.play()
-            elif state == QMediaPlayer.PlayingState:
-                self.pause()
-            elif state == QMediaPlayer.PausedState:
-                self.resume()
 
-    def sizes(self):
-        # TODO delete this func later
-        w = self.frameGeometry().width()
-        h = self.frameGeometry().height()
-        self.setWindowTitle(f'{w}, {h}')
+    def select_func(self):
+        """Selects the desired function: play, pause or resume"""
+        if not self.playlist:
+            self.set_error(NO_FILE_ERROR)
+            return
+        self.set_error(None)
+        state = self.player.state()
+        if state == QMediaPlayer.StoppedState:
+            self.play()
+        elif state == QMediaPlayer.PlayingState:
+            self.pause()
+        elif state == QMediaPlayer.PausedState:
+            self.resume()
 
-    def print_playlist(self):
-        # TODO delete this func later
-        print(self.playlist)
+    def set_error(self, msg):
+        if msg is None:
+            self.error_label.hide()
+        else:
+            self.error_label.setText(msg)
+            self.error_label.show()
 
     def play(self):
-        url = QUrl.fromLocalFile(self.playlist[self.current_audio_index])
+        url = QtCore.QUrl(self.playlist[self.cursor])
         self.player.setMedia(QMediaContent(url))
-        self.main_button.setIcon(QIcon('resources\\icons\\pause.svg'))
+        self.main_button.setIcon(PAUSE_ICON)
         self.player.play()
+        self.current_time_label.setText('0:00')
         self.song_slider.setSliderPosition(0)
-        self.image.show()
 
     def pause(self):
         self.player.pause()
-        self.main_button.setIcon(QIcon('resources\\icons\\play.svg'))
+        self.main_button.setIcon(PLAY_ICON)
 
     def resume(self):
         self.player.play()
-        self.main_button.setIcon(QIcon('resources\\icons\\pause.svg'))
+        self.main_button.setIcon(PAUSE_ICON)
 
     def stop(self):
         self.player.stop()
         self.playlist.clear()
-        self.main_button.setIcon(QIcon('resources\\icons\\play.svg'))
+        self.main_button.setIcon(PLAY_ICON)
 
     def open_file(self):
         file_path = \
@@ -163,7 +140,8 @@ class Window(QMainWindow, Ui_MainWindow):
 
         self.stop()
         self.playlist.append(file_path)
-        self.error_label.hide()
+        self.set_error(None)
+        self.cursor = 0
         self.load_metadata()
 
     def open_folder(self):
@@ -171,24 +149,28 @@ class Window(QMainWindow, Ui_MainWindow):
         if folder_path == '':
             return
         self.stop()
-        iterator = QDirIterator(folder_path, ['*.mp3', '*.wav', '*.ogg'])
+
+        iterator = QtCore.QDirIterator(folder_path, ['*.mp3', '*.wav', '*.ogg'])
         while iterator.hasNext():
             self.playlist.append(iterator.next())
-        if len(self.playlist) != 0:
-            self.load_metadata()
-            self.update_slider()
-        else:
-            self.image.hide()
-            self.title_label.setText('')
-            self.author_label.setText('')
+
+        self.load_metadata()
 
     def load_metadata(self):
-        file_path = self.playlist[self.current_audio_index]
+        if len(self.playlist) == 0:
+            self.image.setPixmap(QPixmap.fromImage(DEFAULT_IMAGE))
+            self.title_label.setText('')
+            self.author_label.setText('')
+            return
+
+        self.update_slider()
+        self.update_time()
+        file_path = self.playlist[self.cursor]
         tag = TinyTag.get(file_path, image=True)
 
         title = tag.title
         if title is None:
-            title = title = file_path[file_path.rfind('/') + 1:]
+            title = file_path[file_path.rfind('/') + 1:]
         if len(title) > 35:
             title = title[0:35] + '...'
         self.title_label.setText(title)
@@ -204,7 +186,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         image = tag.get_image()
         if image is None:
-            self.image.setPixmap(QPixmap.fromImage(QImage('resources\\default.png')))
+            self.image.setPixmap(QPixmap.fromImage(DEFAULT_IMAGE))
         else:
             save_audio_image(image)
             self.image.setPixmap(QPixmap.fromImage(QImage('resources\\temp.png')))
@@ -226,73 +208,19 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def open_properties_widget(self):
         if len(self.playlist) == 0:
-            self.error_label.show()
+            self.set_error(NO_FILE_ERROR)
         else:
-            self.error_label.hide()
+            self.set_error(None)
             x = self.x() + self.width() + 10
             y = self.y() + 37
             height = self.height()
-            file_path = self.playlist[self.current_audio_index]
+            file_path = self.playlist[self.cursor]
             self.properties_widget = PropertiesWidget(x, y, height, file_path)
             self.properties_widget.show()
 
     def open_about_widget(self):
         self.about_widget = AboutWidget()
         self.about_widget.show()
-
-
-class PropertiesWidget(QWidget, Ui_PropertiesWidget):
-    def __init__(self, x, y, height, file_path):
-        super(PropertiesWidget, self).__init__()
-        self.setupUi(self)
-        self.setGeometry(x, y, self.width(), height)
-        self.file_path = file_path
-        self.load_properties()
-
-    def load_properties(self):
-        tag = TinyTag.get(self.file_path)
-
-        title = tag.title
-        authors = tag.artist
-        album = tag.album
-        genre = tag.genre
-        year = tag.year
-        length = str(f'{int(tag.duration / 60)}:{int(tag.duration % 60) + 1:02}')
-
-        self.title_text.setText(title)
-        try:
-            self.author_text.setText(', '.join(authors.split('/')))
-        except AttributeError:
-            pass
-        self.album_text.setText(album)
-        self.genre_text.setText(genre)
-        self.year_text.setText(year)
-        self.length_text.setText(length)
-        self.file_text.setText(self.file_path)
-
-
-class VolumeWidget(QWidget, Ui_VolumeWidget):
-    def __init__(self, player, x, y, width, color):
-        super(VolumeWidget, self).__init__()
-        self.setupUi(self)
-        self.setGeometry(x, y, width, self.height())
-        self.setStyleSheet(f'background-color: rgb({color.red()}, {color.green()}, {color.blue()});')
-
-        self.player = player
-        self.volume_slider.setValue(self.player.volume())
-        self.volume_slider.valueChanged.connect(self.change_volume)
-        QtCore.QTimer.singleShot(10000, self.close)
-
-    def change_volume(self, value):
-        self.player.setVolume(value)
-
-
-class AboutWidget(QWidget, Ui_AboutWidget):
-    def __init__(self):
-        super(AboutWidget, self).__init__()
-        self.setupUi(self)
-        self.setFixedSize(430, 330)
-        self.github_button.clicked.connect(lambda: webbrowser.open('https://github.com/skosarex/AudioPlayer'))
 
 
 def except_hook(cls, exception, traceback):

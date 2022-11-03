@@ -25,9 +25,6 @@ class Ui_VolumeWidget(object):
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.volume_slider = QtWidgets.QSlider(VolumeWidget)
-        self.volume_slider.setStyleSheet("selection-color: rgb(255, 255, 255);\n"
-"gridline-color: rgb(255, 255, 255);\n"
-"selection-background-color: rgb(255, 255, 255);")
         self.volume_slider.setSliderPosition(99)
         self.volume_slider.setOrientation(QtCore.Qt.Horizontal)
         self.volume_slider.setTickPosition(QtWidgets.QSlider.NoTicks)
