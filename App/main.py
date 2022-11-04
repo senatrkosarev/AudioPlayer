@@ -9,12 +9,12 @@ from tinytag import TinyTag
 from image import find_average_color, save_audio_image
 from database import AudiofileDao, UserDao
 from resources.ui.MainWindow import Ui_MainWindow
-from widgets import VolumeWidget, PropertiesWidget, AboutWidget
+from widgets import VolumeWidget, PropertiesWidget, AboutWidget, FavoriteWidget
 
 PLAY_ICON = QIcon('resources\\icons\\play.svg')
 PAUSE_ICON = QIcon('resources\\icons\\pause.svg')
 DEFAULT_IMAGE = QImage('resources\\default.png')
-NO_FILE_ERROR = 'Ошибка: не выбран файл!'
+NO_FILE_ERROR = 'Error: file not selected!'
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -36,6 +36,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.like_button.clicked.connect(self.like)
         self.dislike_button.clicked.connect(self.dislike)
         self.volume_button.clicked.connect(self.open_volume_widget)
+        self.playlist_button.clicked.connect(self.open_favorites)
         self.open_file_action.triggered.connect(self.open_file)
         self.open_folder_action.triggered.connect(self.open_folder)
         self.properties_action.triggered.connect(self.open_properties_widget)
@@ -61,7 +62,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def like(self):
         try:
-            self.audio_dao.save(1, self.title_label.text(), self.playlist[self.cursor])
+            self.audio_dao.save(1, self.title_label.text(), self.author_label.text(), self.playlist[self.cursor])
         except IndexError:
             pass
 
@@ -221,6 +222,10 @@ class Window(QMainWindow, Ui_MainWindow):
     def open_about_widget(self):
         self.about_widget = AboutWidget()
         self.about_widget.show()
+
+    def open_favorites(self):
+        self.favorite_widget = FavoriteWidget(self, 1)
+        self.favorite_widget.show()
 
 
 def except_hook(cls, exception, traceback):

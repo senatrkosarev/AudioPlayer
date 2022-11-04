@@ -25,7 +25,7 @@ class UserDao:
 
     def get_all(self):
         query = 'SELECT login FROM user'
-        users = self.cur.execute(query,).fetchall()
+        users = self.cur.execute(query, ).fetchall()
         return users
 
 
@@ -39,18 +39,19 @@ class AudiofileDao:
         audio = self.cur.execute(query, (id,)).fetchone()
         return audio
 
-    def save(self, user_id, title, file_path):
-        query = 'INSERT INTO audiofile(user_id, title, file_path) VALUES (?, ?, ?)'
+    def save(self, user_id, title, author, file_path):
+        query = 'INSERT INTO audiofile(user_id, title, author, file_path) VALUES (?, ?, ?, ?)'
         try:
-            self.cur.execute(query, (user_id, title, file_path))
+            self.cur.execute(query, (user_id, title, author, file_path))
             self.con.commit()
         except sqlite3.IntegrityError:
             pass
 
-    def delete(self, file_path):
+    def delete(self, path):
         query = 'DELETE FROM audiofile WHERE file_path = ?'
-        self.cur.execute(query, (file_path,))
+        self.cur.execute(query, (path,))
         self.con.commit()
 
     def get_all(self, user_id):
-        pass
+        query = 'SELECT id, title, author, file_path FROM audiofile'
+        return self.cur.execute(query).fetchall()
