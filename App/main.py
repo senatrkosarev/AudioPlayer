@@ -1,9 +1,9 @@
 import sys
 
-from PyQt5 import QtCore
+from PyQt5 import QtCore, uic
 from PyQt5.QtGui import QPixmap, QImage, QIcon, QPalette
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QDialog
 from tinytag import TinyTag
 
 from image import find_average_color, save_audio_image
@@ -17,11 +17,12 @@ DEFAULT_IMAGE = QImage('resources\\default.png')
 NO_FILE_ERROR = 'Error: file not selected!'
 
 
-class Window(QMainWindow, Ui_MainWindow):
-    def __init__(self):
-        super(Window, self).__init__()
+class Player(QMainWindow, Ui_MainWindow):
+    def __init__(self, user_id):
+        super(Player, self).__init__()
         self.setupUi(self)
 
+        self.user_id = user_id
         self.playlist = []
         self.cursor = 0  # current audio index in playlist
         self.player = QMediaPlayer()
@@ -62,7 +63,8 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def like(self):
         try:
-            self.audio_dao.save(1, self.title_label.text(), self.author_label.text(), self.playlist[self.cursor])
+            self.audio_dao.save(self.user_id, self.title_label.text(), self.author_label.text(),
+                                self.playlist[self.cursor])
         except IndexError:
             pass
 
@@ -224,8 +226,37 @@ class Window(QMainWindow, Ui_MainWindow):
         self.about_widget.show()
 
     def open_favorites(self):
-        self.favorite_widget = FavoriteWidget(self, 1)
+        self.favorite_widget = FavoriteWidget(self, self.user_id)
         self.favorite_widget.show()
+
+
+class LogInDialog(QDialog):
+    def __init__(self):
+        super(LogInDialog, self).__init__()
+        uic.loadUi('resources\\ui\\LogInDialog.ui', self)
+        self.dao = UserDao()
+        self.error_label.hide()
+        self.log_in_button.clicked.connect(self.log_in)
+
+    def log_in(self):
+        login = self.login_input.text()
+        password = self.pass_input.text()
+        id = self.is_user_valid(login, password)
+        if id > 0:
+            print(id)
+            self.player = Player(id)
+            self.hide()
+            self.player.show()
+        else:
+            self.error_label.show()
+
+    def is_user_valid(self, login, password):
+        user = self.dao.get(login)
+        print(user)
+        if user is not None and user[3] == password:
+            return user[0]
+        else:
+            return -1
 
 
 def except_hook(cls, exception, traceback):
@@ -234,7 +265,7 @@ def except_hook(cls, exception, traceback):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = Window()
+    window = LogInDialog()
     window.show()
     sys.excepthook = except_hook
     sys.exit(app.exec())

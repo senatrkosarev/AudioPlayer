@@ -24,6 +24,7 @@ class UserDao:
         return user
 
     def get_all(self):
+        # TODO
         query = 'SELECT login FROM user'
         users = self.cur.execute(query, ).fetchall()
         return users
@@ -53,5 +54,5 @@ class AudiofileDao:
         self.con.commit()
 
     def get_all(self, user_id):
-        query = 'SELECT id, title, author, file_path FROM audiofile'
-        return self.cur.execute(query).fetchall()
+        query = 'SELECT id, title, author, file_path FROM audiofile WHERE user_id = ?'
+        return self.cur.execute(query, (user_id,)).fetchall()
