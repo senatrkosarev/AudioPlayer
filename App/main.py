@@ -22,6 +22,27 @@ class Player(QMainWindow, Ui_MainWindow):
         super(Player, self).__init__()
         self.setupUi(self)
 
+        # TODO move to style-file
+        self.song_slider.setStyleSheet("""
+            QSlider::groove:horizontal {  
+                height: 6px;
+                margin: 0px;
+                border-radius: 3px;
+                background: #B0AEB1;
+            }
+            QSlider::handle:horizontal {
+                background: #fff;
+                border: 1px solid #fff;
+                width: 10px;
+                margin: -5px 0; 
+                border-radius: 5px;
+            }
+            QSlider::sub-page:qlineargradient {
+                background: #fff;
+                border-radius: 3px;
+            }
+        """)
+
         self.user_id = user_id
         self.playlist = []
         self.cursor = 0  # current audio index in playlist
@@ -236,27 +257,53 @@ class LogInDialog(QDialog):
         uic.loadUi('resources\\ui\\LogInDialog.ui', self)
         self.dao = UserDao()
         self.error_label.hide()
+
         self.log_in_button.clicked.connect(self.log_in)
+        self.reg_button.clicked.connect(self.create_user)
 
     def log_in(self):
         login = self.login_input.text()
         password = self.pass_input.text()
         id = self.is_user_valid(login, password)
         if id > 0:
-            print(id)
             self.player = Player(id)
             self.hide()
             self.player.show()
         else:
-            self.error_label.show()
+            self.set_error('Error: Invalid login or password.')
 
     def is_user_valid(self, login, password):
         user = self.dao.get(login)
-        print(user)
         if user is not None and user[3] == password:
             return user[0]
         else:
             return -1
+
+    def create_user(self):
+        login = self.login_input.text()
+        password = self.pass_input.text()
+        if self.check_login(login) and self.check_pass(password):
+            self.dao.save(login, login, password)
+            self.log_in()
+
+    def check_pass(self, password):
+        if not 8 <= len(password) <= 30:
+            self.set_error('Error: Password must be 8 to 30 characters long.')
+            return False
+        return True
+
+    def check_login(self, login):
+        if not 3 <= len(login) <= 20:
+            self.set_error('Error: Login must be 3 to 20 characters long.')
+            return False
+        return True
+
+    def set_error(self, msg):
+        if msg is None:
+            self.error_label.hide()
+        else:
+            self.error_label.setText(msg)
+            self.error_label.show()
 
 
 def except_hook(cls, exception, traceback):

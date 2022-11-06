@@ -33,6 +33,25 @@ class Ui_VolumeWidget(object):
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem1)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
+        self.volume_slider.setStyleSheet("""
+            QSlider::groove:horizontal {  
+                height: 6px;
+                margin: 0px;
+                border-radius: 3px;
+                background: #B0AEB1;
+            }
+            QSlider::handle:horizontal {
+                background: #fff;
+                border: 1px solid #fff;
+                width: 10px;
+                margin: -5px 0; 
+                border-radius: 5px;
+            }
+            QSlider::sub-page:qlineargradient {
+                background: #fff;
+                border-radius: 3px;
+            }
+        """)
 
         self.retranslateUi(VolumeWidget)
         QtCore.QMetaObject.connectSlotsByName(VolumeWidget)
