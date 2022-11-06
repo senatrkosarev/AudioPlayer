@@ -8,7 +8,6 @@ from tinytag import TinyTag
 
 from image import find_average_color, save_audio_image
 from database import AudiofileDao, UserDao
-from resources.ui.MainWindow import Ui_MainWindow
 from widgets import VolumeWidget, PropertiesWidget, AboutWidget, FavoriteWidget
 
 PLAY_ICON = QIcon('resources\\icons\\play.svg')
@@ -17,31 +16,11 @@ DEFAULT_IMAGE = QImage('resources\\default.png')
 NO_FILE_ERROR = 'Error: file not selected!'
 
 
-class Player(QMainWindow, Ui_MainWindow):
+class Player(QMainWindow):
     def __init__(self, user_id):
         super(Player, self).__init__()
-        self.setupUi(self)
-
-        # TODO move to style-file
-        self.song_slider.setStyleSheet("""
-            QSlider::groove:horizontal {  
-                height: 6px;
-                margin: 0px;
-                border-radius: 3px;
-                background: #B0AEB1;
-            }
-            QSlider::handle:horizontal {
-                background: #fff;
-                border: 1px solid #fff;
-                width: 10px;
-                margin: -5px 0; 
-                border-radius: 5px;
-            }
-            QSlider::sub-page:qlineargradient {
-                background: #fff;
-                border-radius: 3px;
-            }
-        """)
+        uic.loadUi('resources\\ui\\MainWindow.ui', self)
+        self.init_ui()
 
         self.user_id = user_id
         self.playlist = []
@@ -66,6 +45,36 @@ class Player(QMainWindow, Ui_MainWindow):
         self.next_button.clicked.connect(self.next)
         self.prev_button.clicked.connect(self.previous)
         self.song_slider.sliderReleased.connect(self.slider_released)
+
+    def init_ui(self):
+        self.resize(435, 645)
+        self.setMinimumSize(435, 645)
+
+        # TODO move to .py file and delete func
+        # MainWindow.resize(435, 645)
+        # MainWindow.setMinimumSize(435, 645)
+        self.title_label.hide()
+        self.author_label.hide()
+        self.set_error(None)
+        self.song_slider.setStyleSheet("""
+                    QSlider::groove:horizontal {  
+                        height: 6px;
+                        margin: 0px;
+                        border-radius: 3px;
+                        background: #B0AEB1;
+                    }
+                    QSlider::handle:horizontal {
+                        background: #fff;
+                        border: 1px solid #fff;
+                        width: 10px;
+                        margin: -5px 0; 
+                        border-radius: 5px;
+                    }
+                    QSlider::sub-page:qlineargradient {
+                        background: #fff;
+                        border-radius: 3px;
+                    }
+                """)
 
     def update_slider(self):
         if self.player.state() == QMediaPlayer.PlayingState:
@@ -283,8 +292,11 @@ class LogInDialog(QDialog):
         login = self.login_input.text()
         password = self.pass_input.text()
         if self.check_login(login) and self.check_pass(password):
-            self.dao.save(login, login, password)
-            self.log_in()
+            try:
+                self.dao.save(login, login, password)
+                self.log_in()
+            except Exception:
+                self.set_error('Error: this login is already occupied.')
 
     def check_pass(self, password):
         if not 8 <= len(password) <= 30:

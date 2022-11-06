@@ -1,20 +1,16 @@
 import webbrowser
 
-from PyQt5 import QtCore
+from PyQt5 import QtCore, uic
 from PyQt5.QtWidgets import QWidget, QTableWidgetItem
 from tinytag import TinyTag
 
 from App.database import AudiofileDao
-from resources.ui.VolumeWidget import Ui_VolumeWidget
-from resources.ui.PropertiesWidget import Ui_PropertiesWidget
-from resources.ui.AboutWidget import Ui_AboutWidget
-from resources.ui.FavoriteWidget import Ui_FavoriteWidget
 
 
-class PropertiesWidget(QWidget, Ui_PropertiesWidget):
+class PropertiesWidget(QWidget):
     def __init__(self, x, y, height, file_path):
         super(PropertiesWidget, self).__init__()
-        self.setupUi(self)
+        uic.loadUi('resources\\ui\\PropertiesWidget.ui', self)
         self.setGeometry(x, y, self.width(), height)
         self.file_path = file_path
         self.load_properties()
@@ -41,10 +37,12 @@ class PropertiesWidget(QWidget, Ui_PropertiesWidget):
         self.file_text.setText(self.file_path)
 
 
-class VolumeWidget(QWidget, Ui_VolumeWidget):
+class VolumeWidget(QWidget):
     def __init__(self, player, x, y, width, color):
         super(VolumeWidget, self).__init__()
-        self.setupUi(self)
+        uic.loadUi('resources\\ui\\VolumeWidget.ui', self)
+        self.init_ui()
+
         self.setGeometry(x, y, width, self.height())
         self.setStyleSheet(f'background-color: rgb({color.red()}, {color.green()}, {color.blue()});')
 
@@ -56,19 +54,41 @@ class VolumeWidget(QWidget, Ui_VolumeWidget):
     def change_volume(self, value):
         self.player.setVolume(value)
 
+    def init_ui(self):
+        # TODO move to .py file and delete func
+        self.volume_slider.setStyleSheet("""
+                            QSlider::groove:horizontal {  
+                                height: 6px;
+                                margin: 0px;
+                                border-radius: 3px;
+                                background: #B0AEB1;
+                            }
+                            QSlider::handle:horizontal {
+                                background: #fff;
+                                border: 1px solid #fff;
+                                width: 10px;
+                                margin: -5px 0; 
+                                border-radius: 5px;
+                            }
+                            QSlider::sub-page:qlineargradient {
+                                background: #fff;
+                                border-radius: 3px;
+                            }
+                        """)
 
-class AboutWidget(QWidget, Ui_AboutWidget):
+
+class AboutWidget(QWidget):
     def __init__(self):
         super(AboutWidget, self).__init__()
-        self.setupUi(self)
+        uic.loadUi('resources\\ui\\AboutWidget.ui', self)
         self.setFixedSize(430, 330)
         self.github_button.clicked.connect(lambda: webbrowser.open('https://github.com/skosarex/AudioPlayer'))
 
 
-class FavoriteWidget(QWidget, Ui_FavoriteWidget):
+class FavoriteWidget(QWidget):
     def __init__(self, main_widget, user_id):
         super(FavoriteWidget, self).__init__()
-        self.setupUi(self)
+        uic.loadUi('resources\\ui\\FavoriteWidget.ui', self)
         self.dao = AudiofileDao()
         self.main_widget = main_widget
         self.user_id = user_id
@@ -85,13 +105,15 @@ class FavoriteWidget(QWidget, Ui_FavoriteWidget):
         dao = AudiofileDao()
         data = dao.get_all(self.user_id)
 
-        self.table.setColumnCount(4)
-        self.table.setHorizontalHeaderLabels(['id', 'title', 'author', 'path'])
+        self.table.setColumnCount(2)
+        self.table.setHorizontalHeaderLabels(['title', 'author'])
         self.table.setRowCount(len(data))
 
+        print(data)
         for row in range(len(data)):
-            for col in range(len(data[0])):
-                self.table.setItem(row, col, QTableWidgetItem(str(data[row][col])))
+            for col in range(2):
+                self.table.setItem(row, col, QTableWidgetItem(str(data[row][col + 1])))
+        self.table.resizeColumnsToContents()
 
     def play(self):
         new_playlist = []
@@ -110,3 +132,4 @@ class FavoriteWidget(QWidget, Ui_FavoriteWidget):
     def delete_all(self):
         for song in self.get_data():
             self.dao.delete(song[3])
+        self.load_table()

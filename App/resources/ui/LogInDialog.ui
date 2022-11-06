@@ -6,14 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>540</width>
-    <height>265</height>
+    <width>392</width>
+    <height>203</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Shuffle • Auth</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../icons/logo.svg</normaloff>../icons/logo.svg</iconset>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetMinAndMaxSize</enum>
+   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -91,6 +98,9 @@
      </property>
      <property name="text">
       <string>Error: Invalid username or password</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
