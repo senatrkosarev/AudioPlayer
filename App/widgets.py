@@ -1,17 +1,24 @@
 import webbrowser
 
-from PyQt5 import QtCore, uic
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import QWidget, QTableWidgetItem
 from tinytag import TinyTag
 
 from App.database import AudiofileDao
+from App.resources.ui.PropertiesWidget import Ui_PropertiesWidget
+from App.resources.ui.VolumeWidget import Ui_VolumeWidget
+from App.resources.ui.AboutWidget import Ui_AboutWidget
+from App.resources.ui.FavoriteWidget import Ui_FavoriteWidget
+from App.__version__ import __version__
 
 
-class PropertiesWidget(QWidget):
+class PropertiesWidget(QWidget, Ui_PropertiesWidget):
     def __init__(self, x, y, height, file_path):
         super(PropertiesWidget, self).__init__()
-        uic.loadUi('resources\\ui\\PropertiesWidget.ui', self)
+        self.setupUi(self)
+
         self.setGeometry(x, y, self.width(), height)
+
         self.file_path = file_path
         self.load_properties()
 
@@ -37,11 +44,10 @@ class PropertiesWidget(QWidget):
         self.file_text.setText(self.file_path)
 
 
-class VolumeWidget(QWidget):
+class VolumeWidget(QWidget, Ui_VolumeWidget):
     def __init__(self, player, x, y, width, color):
         super(VolumeWidget, self).__init__()
-        uic.loadUi('resources\\ui\\VolumeWidget.ui', self)
-        self.init_ui()
+        self.setupUi(self)
 
         self.setGeometry(x, y, width, self.height())
         self.setStyleSheet(f'background-color: rgb({color.red()}, {color.green()}, {color.blue()});')
@@ -54,41 +60,21 @@ class VolumeWidget(QWidget):
     def change_volume(self, value):
         self.player.setVolume(value)
 
-    def init_ui(self):
-        # TODO move to .py file and delete func
-        self.volume_slider.setStyleSheet("""
-                            QSlider::groove:horizontal {  
-                                height: 6px;
-                                margin: 0px;
-                                border-radius: 3px;
-                                background: #B0AEB1;
-                            }
-                            QSlider::handle:horizontal {
-                                background: #fff;
-                                border: 1px solid #fff;
-                                width: 10px;
-                                margin: -5px 0; 
-                                border-radius: 5px;
-                            }
-                            QSlider::sub-page:qlineargradient {
-                                background: #fff;
-                                border-radius: 3px;
-                            }
-                        """)
 
-
-class AboutWidget(QWidget):
+class AboutWidget(QWidget, Ui_AboutWidget):
     def __init__(self):
         super(AboutWidget, self).__init__()
-        uic.loadUi('resources\\ui\\AboutWidget.ui', self)
-        self.setFixedSize(430, 330)
+        self.setupUi(self)
+
+        self.version_label.setText(__version__)
         self.github_button.clicked.connect(lambda: webbrowser.open('https://github.com/skosarex/AudioPlayer'))
 
 
-class FavoriteWidget(QWidget):
+class FavoriteWidget(QWidget, Ui_FavoriteWidget):
     def __init__(self, main_widget, user_id):
         super(FavoriteWidget, self).__init__()
-        uic.loadUi('resources\\ui\\FavoriteWidget.ui', self)
+        self.setupUi(self)
+
         self.dao = AudiofileDao()
         self.main_widget = main_widget
         self.user_id = user_id
@@ -102,8 +88,7 @@ class FavoriteWidget(QWidget):
         return self.dao.get_all(self.user_id)
 
     def load_table(self):
-        dao = AudiofileDao()
-        data = dao.get_all(self.user_id)
+        data = self.get_data()
 
         self.table.setColumnCount(2)
         self.table.setHorizontalHeaderLabels(['title', 'author'])
@@ -111,7 +96,6 @@ class FavoriteWidget(QWidget):
         for row in range(len(data)):
             for col in range(2):
                 self.table.setItem(row, col, QTableWidgetItem(str(data[row][col + 1])))
-        self.table.resizeColumnsToContents()
 
     def play(self):
         new_playlist = []

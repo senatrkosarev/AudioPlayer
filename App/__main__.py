@@ -1,26 +1,29 @@
 import sys
+import webbrowser
 
-from PyQt5 import QtCore, uic
+from PyQt5 import QtCore
 from PyQt5.QtGui import QPixmap, QImage, QIcon, QPalette
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QDialog
 from tinytag import TinyTag
 
-from image import find_average_color, save_audio_image
-from database import AudiofileDao, UserDao
-from widgets import VolumeWidget, PropertiesWidget, AboutWidget, FavoriteWidget
+from App.image import find_average_color, save_audio_image
+from App.database import AudiofileDao, UserDao
+from App.widgets import VolumeWidget, PropertiesWidget, AboutWidget, FavoriteWidget
 
-PLAY_ICON = QIcon('resources\\icons\\play.svg')
-PAUSE_ICON = QIcon('resources\\icons\\pause.svg')
-DEFAULT_IMAGE = QImage('resources\\default.png')
+from App.resources.ui.MainWindow import Ui_MainWindow
+from App.resources.ui.LoginDialog import Ui_LoginDialog
+
+PLAY_ICON = QIcon('App/resources/icons/play.svg')
+PAUSE_ICON = QIcon('App/resources/icons/pause.svg')
+DEFAULT_IMAGE = QImage('App/resources/default.png')
 NO_FILE_ERROR = 'Error: file not selected!'
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, user_id):
         super(MainWindow, self).__init__()
-        uic.loadUi('resources\\ui\\MainWindow.ui', self)
-        self.init_ui()
+        self.setupUi(self)
 
         self.user_id = user_id
         self.playlist = []
@@ -41,21 +44,11 @@ class MainWindow(QMainWindow):
         self.open_file_action.triggered.connect(self.open_file)
         self.open_folder_action.triggered.connect(self.open_folder)
         self.properties_action.triggered.connect(self.open_properties_widget)
+        self.support_action.triggered.connect(lambda: webbrowser.open('https://skosarex.t.me'))
         self.about_action.triggered.connect(self.open_about_widget)
         self.next_button.clicked.connect(self.next)
         self.prev_button.clicked.connect(self.previous)
         self.song_slider.sliderReleased.connect(self.slider_released)
-
-    def init_ui(self):
-        self.resize(435, 645)
-        self.setMinimumSize(435, 645)
-
-        # TODO move to .py file and delete func
-        # MainWindow.resize(435, 645)
-        # MainWindow.setMinimumSize(435, 645)
-        self.title_label.hide()
-        self.author_label.hide()
-        self.error_label.hide()
 
     def update_slider(self):
         if self.player.state() == QMediaPlayer.PlayingState:
@@ -86,14 +79,16 @@ class MainWindow(QMainWindow):
             pass
 
     def next(self):
-        self.cursor = (self.cursor + 1) % len(self.playlist)
-        self.load_metadata()
-        self.play()
+        if self.playlist:
+            self.cursor = (self.cursor + 1) % len(self.playlist)
+            self.load_metadata()
+            self.play()
 
     def previous(self):
-        self.cursor = (self.cursor - 1) % len(self.playlist)
-        self.load_metadata()
-        self.play()
+        if self.playlist:
+            self.cursor = (self.cursor - 1) % len(self.playlist)
+            self.load_metadata()
+            self.play()
 
     def end_of_media(self):
         current_time = self.current_time_label.text()
@@ -168,48 +163,52 @@ class MainWindow(QMainWindow):
         while iterator.hasNext():
             self.playlist.append(iterator.next())
 
+        self.set_error(None)
         self.load_metadata()
 
     def load_metadata(self):
-        if len(self.playlist) == 0:
+        if not self.playlist:
             self.image.setPixmap(QPixmap.fromImage(DEFAULT_IMAGE))
             self.title_label.setText('')
             self.author_label.setText('')
             return
 
-        self.update_slider()
-        self.update_time()
         file_path = self.playlist[self.cursor]
         tag = TinyTag.get(file_path, image=True)
 
+        # raw data
         title = tag.title
+        authors = tag.artist
+        image = tag.get_image()
+        duration = tag.duration
+
         if title is None:
             title = file_path[file_path.rfind('/') + 1:]
         if len(title) > 35:
             title = title[0:35] + '...'
-        self.title_label.setText(title)
-        self.title_label.show()
 
-        authors = tag.artist
         if authors:
             authors = ', '.join(authors.split('/'))
             if len(authors) > 35:
                 authors = authors[0:35] + '...'
+
+        # set metadata
+        self.update_slider()
+        self.update_time()
+        self.title_label.setText(title)
+        self.title_label.show()
         self.author_label.setText(authors if authors else 'Unknown author')
         self.author_label.show()
-
-        image = tag.get_image()
+        self.end_time_label.setText(str(f'{int(duration / 60)}:{int(duration % 60) + 1:02}'))
         if image is None:
             self.image.setPixmap(QPixmap.fromImage(DEFAULT_IMAGE))
         else:
             save_audio_image(image)
-            self.image.setPixmap(QPixmap.fromImage(QImage('resources\\temp.png')))
+            self.image.setPixmap(QPixmap.fromImage(QImage('App/resources/temp.png')))
 
-        duration = str(f'{int(tag.duration / 60)}:{int(tag.duration % 60) + 1:02}')
-        self.end_time_label.setText(str(duration))
-
-        self.image.pixmap().toImage().save('resources\\temp.png')
-        colors = find_average_color('resources\\temp.png')
+        # set background color
+        self.image.pixmap().toImage().save('App/resources/temp.png')
+        colors = find_average_color('App/resources/temp.png')
         self.setStyleSheet(f'background-color: rgb({colors[0]}, {colors[1]}, {colors[2]});')
 
     def open_volume_widget(self):
@@ -223,14 +222,15 @@ class MainWindow(QMainWindow):
     def open_properties_widget(self):
         if len(self.playlist) == 0:
             self.set_error(NO_FILE_ERROR)
-        else:
-            self.set_error(None)
-            x = self.x() + self.width() + 10
-            y = self.y() + 37
-            height = self.height()
-            file_path = self.playlist[self.cursor]
-            self.properties_widget = PropertiesWidget(x, y, height, file_path)
-            self.properties_widget.show()
+            return
+
+        self.set_error(None)
+        x = self.x() + self.width() + 10
+        y = self.y() + 37
+        height = self.height()
+        file_path = self.playlist[self.cursor]
+        self.properties_widget = PropertiesWidget(x, y, height, file_path)
+        self.properties_widget.show()
 
     def open_about_widget(self):
         self.about_widget = AboutWidget()
@@ -241,12 +241,12 @@ class MainWindow(QMainWindow):
         self.favorite_widget.show()
 
 
-class LoginDialog(QDialog):
+class LoginDialog(QDialog, Ui_LoginDialog):
     def __init__(self):
         super(LoginDialog, self).__init__()
-        uic.loadUi('resources\\ui\\LoginDialog.ui', self)
+        self.setupUi(self)
+
         self.dao = UserDao()
-        self.error_label.hide()
 
         self.log_in_button.clicked.connect(self.log_in)
         self.reg_button.clicked.connect(self.create_user)
@@ -263,11 +263,9 @@ class LoginDialog(QDialog):
             self.set_error('Error: Invalid login or password.')
 
     def is_user_valid(self, login, password):
+        """Returns ID if user exists, else -1"""
         user = self.dao.get(login)
-        if user is not None and user[3] == password:
-            return user[0]
-        else:
-            return -1
+        return user[0] if user is not None and user[3] == password else -1
 
     def create_user(self):
         login = self.login_input.text()
@@ -303,9 +301,13 @@ def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
 
-if __name__ == '__main__':
+def main():
     app = QApplication(sys.argv)
     window = LoginDialog()
     window.show()
     sys.excepthook = except_hook
     sys.exit(app.exec())
+
+
+if __name__ == '__main__':
+    main()

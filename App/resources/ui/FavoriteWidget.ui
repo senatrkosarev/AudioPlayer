@@ -54,6 +54,9 @@
      <property name="columnCount">
       <number>2</number>
      </property>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>300</number>
+     </attribute>
      <column/>
      <column/>
     </widget>
