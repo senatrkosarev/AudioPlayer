@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LogIn</class>
- <widget class="QDialog" name="LogIn">
+ <class>LoginDialog</class>
+ <widget class="QDialog" name="LoginDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>392</width>
-    <height>203</height>
+    <width>379</width>
+    <height>151</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,13 @@
   <property name="windowIcon">
    <iconset>
     <normaloff>../icons/logo.svg</normaloff>../icons/logo.svg</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(41, 51, 56);
+color: rgb(255, 255, 255);
+hover {
+  background-color: rgb(59, 65, 72);
+}</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="sizeConstraint">
@@ -37,7 +44,15 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="login_input"/>
+      <widget class="QLineEdit" name="login_input">
+       <property name="styleSheet">
+        <string notr="true">border-radius: 5px;
+border-color: rgb(72, 89, 98);
+border-width: 2px;
+border-style: solid;
+height: 24px;</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -57,7 +72,15 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="pass_input"/>
+      <widget class="QLineEdit" name="pass_input">
+       <property name="styleSheet">
+        <string notr="true">border-radius: 5px;
+border-color: rgb(72, 89, 98);
+border-width: 2px;
+border-style: solid;
+height: 24px;</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -65,6 +88,25 @@
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QPushButton" name="reg_button">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	border-radius: 5px;
+	background-color: rgb(72, 89, 98);
+	height: 30px;
+}
+QPushButton:hover {
+	background-color: rgb(103, 128, 140);
+}
+QPushButton:onclick {
+	background-color: rgb(56, 70, 77);
+}</string>
+       </property>
        <property name="text">
         <string>Register</string>
        </property>
@@ -75,8 +117,30 @@
      </item>
      <item>
       <widget class="QPushButton" name="log_in_button">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	border-radius: 5px;
+	background-color: rgb(72, 89, 98);
+	height: 30px;
+}
+QPushButton:hover {
+	background-color: rgb(103, 128, 140);
+}
+QPushButton:onclick {
+	background-color: rgb(56, 70, 77);
+}</string>
+       </property>
        <property name="text">
         <string>Log in</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
        </property>
        <property name="default">
         <bool>true</bool>

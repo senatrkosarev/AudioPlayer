@@ -16,9 +16,9 @@ DEFAULT_IMAGE = QImage('resources\\default.png')
 NO_FILE_ERROR = 'Error: file not selected!'
 
 
-class Player(QMainWindow):
+class MainWindow(QMainWindow):
     def __init__(self, user_id):
-        super(Player, self).__init__()
+        super(MainWindow, self).__init__()
         uic.loadUi('resources\\ui\\MainWindow.ui', self)
         self.init_ui()
 
@@ -55,26 +55,7 @@ class Player(QMainWindow):
         # MainWindow.setMinimumSize(435, 645)
         self.title_label.hide()
         self.author_label.hide()
-        self.set_error(None)
-        self.song_slider.setStyleSheet("""
-                    QSlider::groove:horizontal {  
-                        height: 6px;
-                        margin: 0px;
-                        border-radius: 3px;
-                        background: #B0AEB1;
-                    }
-                    QSlider::handle:horizontal {
-                        background: #fff;
-                        border: 1px solid #fff;
-                        width: 10px;
-                        margin: -5px 0; 
-                        border-radius: 5px;
-                    }
-                    QSlider::sub-page:qlineargradient {
-                        background: #fff;
-                        border-radius: 3px;
-                    }
-                """)
+        self.error_label.hide()
 
     def update_slider(self):
         if self.player.state() == QMediaPlayer.PlayingState:
@@ -260,10 +241,10 @@ class Player(QMainWindow):
         self.favorite_widget.show()
 
 
-class LogInDialog(QDialog):
+class LoginDialog(QDialog):
     def __init__(self):
-        super(LogInDialog, self).__init__()
-        uic.loadUi('resources\\ui\\LogInDialog.ui', self)
+        super(LoginDialog, self).__init__()
+        uic.loadUi('resources\\ui\\LoginDialog.ui', self)
         self.dao = UserDao()
         self.error_label.hide()
 
@@ -275,7 +256,7 @@ class LogInDialog(QDialog):
         password = self.pass_input.text()
         id = self.is_user_valid(login, password)
         if id > 0:
-            self.player = Player(id)
+            self.player = MainWindow(id)
             self.hide()
             self.player.show()
         else:
@@ -324,7 +305,7 @@ def except_hook(cls, exception, traceback):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = LogInDialog()
+    window = LoginDialog()
     window.show()
     sys.excepthook = except_hook
     sys.exit(app.exec())

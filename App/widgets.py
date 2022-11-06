@@ -108,8 +108,6 @@ class FavoriteWidget(QWidget):
         self.table.setColumnCount(2)
         self.table.setHorizontalHeaderLabels(['title', 'author'])
         self.table.setRowCount(len(data))
-
-        print(data)
         for row in range(len(data)):
             for col in range(2):
                 self.table.setItem(row, col, QTableWidgetItem(str(data[row][col + 1])))
@@ -127,7 +125,7 @@ class FavoriteWidget(QWidget):
         else:
             self.main_widget.playlist = new_playlist
             self.main_widget.play()
-            self.main_widget.load_metadata()  # TODO delete this line??
+            self.main_widget.load_metadata()
 
     def delete_all(self):
         for song in self.get_data():
