@@ -1,4 +1,4 @@
-# Shuffle audio player
+# Shuffle Audio Player
 
 ![screenshot](screenshot.png)
 
