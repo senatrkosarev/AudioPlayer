@@ -8,20 +8,22 @@
 * Play and pause
 * Add Audio to Favorites
 * Change volume
+* Show audio metadata
+* And others...
 
 ## Installation:
 
 1. Clone repository
 
-```
-git clone https://github.com/skosarex/AudioPlayer
-```
+    ```
+    git clone https://github.com/skosarex/AudioPlayer
+    ```
 
-2. Run program
+2. Run the program
 
-```
-py -m App
-```
+    ```
+    py -m App
+    ```
 
 #
 
