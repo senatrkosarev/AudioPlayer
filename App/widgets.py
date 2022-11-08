@@ -103,9 +103,6 @@ class FavoriteWidget(QWidget, Ui_FavoriteWidget):
             new_playlist.append(song[3])
         if not new_playlist:
             self.main_widget.set_error('Error: No favorite music!')
-            self.error_timer = QtCore.QTimer()
-            self.error_timer.start(5000)
-            self.error_timer.timeout.connect(lambda: self.main_widget.set_error(None))
         else:
             self.main_widget.playlist = new_playlist
             self.main_widget.cursor = 0

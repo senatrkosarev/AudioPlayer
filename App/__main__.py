@@ -151,6 +151,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.error_label.setText(msg)
             self.error_label.show()
+            # timer for auto-hide in 5 seconds
+            self.error_timer = QtCore.QTimer()
+            self.error_timer.start(5000)
+            self.error_timer.timeout.connect(lambda: self.set_error(None))
 
     def slider_released(self):
         self.player.setPosition(self.song_slider.value())
