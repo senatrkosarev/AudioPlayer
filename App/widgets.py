@@ -81,7 +81,7 @@ class FavoriteWidget(QWidget, Ui_FavoriteWidget):
         self.load_table()
 
         self.reload_button.clicked.connect(self.load_table)
-        self.play_button.clicked.connect(self.play)
+        self.play_button.clicked.connect(self.play_favorites)
         self.delete_button.clicked.connect(self.delete_all)
 
     def get_data(self):
@@ -97,7 +97,7 @@ class FavoriteWidget(QWidget, Ui_FavoriteWidget):
             for col in range(2):
                 self.table.setItem(row, col, QTableWidgetItem(str(data[row][col + 1])))
 
-    def play(self):
+    def play_favorites(self):
         new_playlist = []
         for song in self.get_data():
             new_playlist.append(song[3])
@@ -108,8 +108,9 @@ class FavoriteWidget(QWidget, Ui_FavoriteWidget):
             self.error_timer.timeout.connect(lambda: self.main_widget.set_error(None))
         else:
             self.main_widget.playlist = new_playlist
+            self.main_widget.cursor = 0
             self.main_widget.play()
-            self.main_widget.load_metadata()
+            self.main_widget.update_metadata()
 
     def delete_all(self):
         for song in self.get_data():

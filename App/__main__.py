@@ -16,7 +16,8 @@ from App.resources.ui.LoginDialog import Ui_LoginDialog
 
 PLAY_ICON = QIcon('App/resources/icons/play.svg')
 PAUSE_ICON = QIcon('App/resources/icons/pause.svg')
-DEFAULT_IMAGE = QImage('App/resources/default.png')
+DEFAULT_IMAGE_PATH = 'App/resources/default.png'
+TEMP_IMAGE_PATH = 'App/resources/temp.png'
 NO_FILE_ERROR = 'Error: file not selected!'
 
 
@@ -40,7 +41,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.like_button.clicked.connect(self.like)
         self.dislike_button.clicked.connect(self.dislike)
         self.volume_button.clicked.connect(self.open_volume_widget)
-        self.playlist_button.clicked.connect(self.open_favorites)
+        self.playlist_button.clicked.connect(self.open_favorites_widget)
         self.open_file_action.triggered.connect(self.open_file)
         self.open_folder_action.triggered.connect(self.open_folder)
         self.properties_action.triggered.connect(self.open_properties_widget)
@@ -49,55 +50,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.next_button.clicked.connect(self.next)
         self.prev_button.clicked.connect(self.previous)
         self.song_slider.sliderReleased.connect(self.slider_released)
-
-    def update_slider(self):
-        if self.player.state() == QMediaPlayer.PlayingState:
-            self.song_slider.setMinimum(0)
-            self.song_slider.setMaximum(self.player.duration())
-            self.song_slider.setValue(self.song_slider.value() + 1000)
-
-    def update_time(self):
-        pos = self.player.position()
-        current_time = str(f'{int(pos / 60000)}:{int((pos / 1000) % 60):02}')
-        self.current_time_label.setText(current_time)
-
-    def slider_released(self):
-        self.player.setPosition(self.song_slider.value())
-        self.update_time()
-
-    def like(self):
-        try:
-            self.audio_dao.save(self.user_id, self.title_label.text(), self.author_label.text(),
-                                self.playlist[self.cursor])
-        except IndexError:
-            pass
-
-    def dislike(self):
-        try:
-            self.audio_dao.delete(self.playlist[self.cursor])
-        except IndexError:
-            pass
-
-    def next(self):
-        if self.playlist:
-            self.cursor = (self.cursor + 1) % len(self.playlist)
-            self.load_metadata()
-            self.play()
-
-    def previous(self):
-        if self.playlist:
-            self.cursor = (self.cursor - 1) % len(self.playlist)
-            self.load_metadata()
-            self.play()
-
-    def end_of_media(self):
-        current_time = self.current_time_label.text()
-        end_time = self.end_time_label.text()
-        if self.player.state() == QMediaPlayer.StoppedState and current_time[:-1] == end_time[:-1]:
-            if len(self.playlist) > 1:
-                self.next()
-            else:
-                self.play()
 
     def select_func(self):
         """Selects the desired function: play, pause or resume"""
@@ -112,13 +64,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pause()
         elif state == QMediaPlayer.PausedState:
             self.resume()
-
-    def set_error(self, msg):
-        if msg is None:
-            self.error_label.hide()
-        else:
-            self.error_label.setText(msg)
-            self.error_label.show()
 
     def play(self):
         url = QtCore.QUrl(self.playlist[self.cursor])
@@ -141,6 +86,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.playlist.clear()
         self.main_button.setIcon(PLAY_ICON)
 
+    def next(self):
+        if self.playlist:
+            self.cursor = (self.cursor + 1) % len(self.playlist)
+            self.update_metadata()
+            self.play()
+
+    def previous(self):
+        if self.playlist:
+            self.cursor = (self.cursor - 1) % len(self.playlist)
+            self.update_metadata()
+            self.play()
+
+    def like(self):
+        try:
+            self.audio_dao.save(self.user_id, self.title_label.text(), self.author_label.text(),
+                                self.playlist[self.cursor])
+        except IndexError:
+            pass
+
+    def dislike(self):
+        try:
+            self.audio_dao.delete(self.playlist[self.cursor])
+        except IndexError:
+            pass
+
+    def end_of_media(self):
+        current_time = self.current_time_label.text()
+        end_time = self.end_time_label.text()
+        if self.player.state() == QMediaPlayer.StoppedState and current_time[:-1] == end_time[:-1]:
+            if len(self.playlist) > 1:
+                self.next()
+            else:
+                self.play()
+
     def open_file(self):
         file_path = \
             QFileDialog.getOpenFileName(self, 'Select audio file', '', 'Audio (*.mp3 *.wav);;All files (*)')[0]
@@ -151,7 +130,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.playlist.append(file_path)
         self.set_error(None)
         self.cursor = 0
-        self.load_metadata()
+        self.update_metadata()
 
     def open_folder(self):
         folder_path = QFileDialog.getExistingDirectory(self, 'Select folder')
@@ -159,16 +138,38 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
         self.stop()
 
-        iterator = QtCore.QDirIterator(folder_path, ['*.mp3', '*.wav', '*.ogg'])
+        iterator = QtCore.QDirIterator(folder_path, ['*.mp3', '*.wav'])
         while iterator.hasNext():
             self.playlist.append(iterator.next())
 
         self.set_error(None)
-        self.load_metadata()
+        self.update_metadata()
 
-    def load_metadata(self):
+    def set_error(self, msg):
+        if msg is None:
+            self.error_label.hide()
+        else:
+            self.error_label.setText(msg)
+            self.error_label.show()
+
+    def slider_released(self):
+        self.player.setPosition(self.song_slider.value())
+        self.update_time()
+
+    def update_slider(self):
+        if self.player.state() == QMediaPlayer.PlayingState:
+            self.song_slider.setMinimum(0)
+            self.song_slider.setMaximum(self.player.duration())
+            self.song_slider.setValue(self.song_slider.value() + 1000)
+
+    def update_time(self):
+        pos = self.player.position()
+        current_time = str(f'{int(pos / 60000)}:{int((pos / 1000) % 60):02}')
+        self.current_time_label.setText(current_time)
+
+    def update_metadata(self):
         if not self.playlist:
-            self.image.setPixmap(QPixmap.fromImage(DEFAULT_IMAGE))
+            self.image.setPixmap(QPixmap.fromImage(QImage(DEFAULT_IMAGE_PATH)))
             self.title_label.setText('')
             self.author_label.setText('')
             return
@@ -182,6 +183,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         image = tag.get_image()
         duration = tag.duration
 
+        # validation
         if title is None:
             title = file_path[file_path.rfind('/') + 1:]
         if len(title) > 35:
@@ -201,14 +203,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.author_label.show()
         self.end_time_label.setText(str(f'{int(duration / 60)}:{int(duration % 60) + 1:02}'))
         if image is None:
-            self.image.setPixmap(QPixmap.fromImage(DEFAULT_IMAGE))
+            self.image.setPixmap(QPixmap.fromImage(QImage(DEFAULT_IMAGE_PATH)))
         else:
             save_audio_image(image)
-            self.image.setPixmap(QPixmap.fromImage(QImage('App/resources/temp.png')))
+            self.image.setPixmap(QPixmap.fromImage(QImage(TEMP_IMAGE_PATH)))
 
         # set background color
-        self.image.pixmap().toImage().save('App/resources/temp.png')
-        colors = find_average_color('App/resources/temp.png')
+        self.image.pixmap().toImage().save(TEMP_IMAGE_PATH)
+        colors = find_average_color(TEMP_IMAGE_PATH)
         self.setStyleSheet(f'background-color: rgb({colors[0]}, {colors[1]}, {colors[2]});')
 
     def open_volume_widget(self):
@@ -236,7 +238,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.about_widget = AboutWidget()
         self.about_widget.show()
 
-    def open_favorites(self):
+    def open_favorites_widget(self):
         self.favorite_widget = FavoriteWidget(self, self.user_id)
         self.favorite_widget.show()
 
@@ -254,9 +256,9 @@ class LoginDialog(QDialog, Ui_LoginDialog):
     def log_in(self):
         login = self.login_input.text()
         password = self.pass_input.text()
-        id = self.is_user_valid(login, password)
-        if id > 0:
-            self.player = MainWindow(id)
+        user_id = self.is_user_valid(login, password)
+        if user_id > 0:
+            self.player = MainWindow(user_id)
             self.hide()
             self.player.show()
         else:

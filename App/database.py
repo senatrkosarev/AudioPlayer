@@ -32,11 +32,11 @@ class AudiofileDao:
         except sqlite3.IntegrityError:
             pass
 
+    def get_all(self, user_id):
+        query = 'SELECT id, title, author, file_path FROM audiofile WHERE user_id = ?'
+        return self.cur.execute(query, (user_id,)).fetchall()
+
     def delete(self, path):
         query = 'DELETE FROM audiofile WHERE file_path = ?'
         self.cur.execute(query, (path,))
         self.con.commit()
-
-    def get_all(self, user_id):
-        query = 'SELECT id, title, author, file_path FROM audiofile WHERE user_id = ?'
-        return self.cur.execute(query, (user_id,)).fetchall()
