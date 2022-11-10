@@ -53,6 +53,7 @@ class Ui_LoginDialog(object):
 "border-width: 2px;\n"
 "border-style: solid;\n"
 "height: 24px;")
+        self.pass_input.setEchoMode(QtWidgets.QLineEdit.Password)
         self.pass_input.setObjectName("pass_input")
         self.horizontalLayout_2.addWidget(self.pass_input)
         self.verticalLayout.addLayout(self.horizontalLayout_2)

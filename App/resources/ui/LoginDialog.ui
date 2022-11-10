@@ -80,6 +80,9 @@ border-width: 2px;
 border-style: solid;
 height: 24px;</string>
        </property>
+       <property name="echoMode">
+        <enum>QLineEdit::Password</enum>
+       </property>
       </widget>
      </item>
     </layout>
