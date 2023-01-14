@@ -43,7 +43,7 @@ class Ui_VolumeWidget(object):
                                         height: 6px;
                                         margin: 0px;
                                         border-radius: 3px;
-                                        background: #B0AEB1;
+                                        background: rgb(255, 255, 255, 0.4);
                                     }
                                     QSlider::handle:horizontal {
                                         background: #fff;
