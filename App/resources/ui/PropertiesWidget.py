@@ -24,14 +24,14 @@ class Ui_PropertiesWidget(object):
         icon.addPixmap(QtGui.QPixmap("App/resources/icons/info_black.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         PropertiesWidget.setWindowIcon(icon)
         PropertiesWidget.setStyleSheet("QLabel {\n"
-"    color: rgb(120, 120, 120);\n"
-"}\n"
-"QWidget#PropertiesWidget {\n"
-"    background-color: rgb(98, 64, 194);\n"
-"}")
+                                       "    color: rgb(120, 120, 120);\n"
+                                       "}\n"
+                                       "QWidget#PropertiesWidget {\n"
+                                       "    background-color: rgb(98, 64, 194);\n"
+                                       "}")
         self.gridLayout = QtWidgets.QGridLayout(PropertiesWidget)
-        self.gridLayout.setContentsMargins(70, 70, 70, 70)
-        self.gridLayout.setHorizontalSpacing(30)
+        self.gridLayout.setContentsMargins(65, 65, 65, 65)
+        self.gridLayout.setHorizontalSpacing(40)
         self.gridLayout.setObjectName("gridLayout")
         self.title_label = QtWidgets.QLabel(PropertiesWidget)
         font = QtGui.QFont()
@@ -54,7 +54,7 @@ class Ui_PropertiesWidget(object):
         self.file_text.setFont(font)
         self.file_text.setText("")
         self.file_text.setFrame(False)
-        self.file_text.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.file_text.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.file_text.setReadOnly(True)
         self.file_text.setObjectName("file_text")
         self.gridLayout.addWidget(self.file_text, 6, 1, 1, 1)
@@ -64,7 +64,7 @@ class Ui_PropertiesWidget(object):
         font.setStyleStrategy(QtGui.QFont.PreferAntialias)
         self.album_text.setFont(font)
         self.album_text.setFrame(False)
-        self.album_text.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.album_text.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.album_text.setReadOnly(True)
         self.album_text.setObjectName("album_text")
         self.gridLayout.addWidget(self.album_text, 2, 1, 1, 1)
@@ -88,7 +88,7 @@ class Ui_PropertiesWidget(object):
         font.setStyleStrategy(QtGui.QFont.PreferAntialias)
         self.year_text.setFont(font)
         self.year_text.setFrame(False)
-        self.year_text.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.year_text.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.year_text.setReadOnly(True)
         self.year_text.setObjectName("year_text")
         self.gridLayout.addWidget(self.year_text, 4, 1, 1, 1)
@@ -99,7 +99,7 @@ class Ui_PropertiesWidget(object):
         self.length_text.setFont(font)
         self.length_text.setText("")
         self.length_text.setFrame(False)
-        self.length_text.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.length_text.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.length_text.setReadOnly(True)
         self.length_text.setObjectName("length_text")
         self.gridLayout.addWidget(self.length_text, 5, 1, 1, 1)
@@ -123,7 +123,7 @@ class Ui_PropertiesWidget(object):
         font.setStyleStrategy(QtGui.QFont.PreferAntialias)
         self.title_text.setFont(font)
         self.title_text.setFrame(False)
-        self.title_text.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.title_text.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.title_text.setReadOnly(True)
         self.title_text.setObjectName("title_text")
         self.gridLayout.addWidget(self.title_text, 0, 1, 1, 1)
@@ -133,7 +133,7 @@ class Ui_PropertiesWidget(object):
         font.setStyleStrategy(QtGui.QFont.PreferAntialias)
         self.author_text.setFont(font)
         self.author_text.setFrame(False)
-        self.author_text.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.author_text.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.author_text.setReadOnly(True)
         self.author_text.setObjectName("author_text")
         self.gridLayout.addWidget(self.author_text, 1, 1, 1, 1)
@@ -143,7 +143,7 @@ class Ui_PropertiesWidget(object):
         font.setStyleStrategy(QtGui.QFont.PreferAntialias)
         self.genre_text.setFont(font)
         self.genre_text.setFrame(False)
-        self.genre_text.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.genre_text.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.genre_text.setReadOnly(True)
         self.genre_text.setObjectName("genre_text")
         self.gridLayout.addWidget(self.genre_text, 3, 1, 1, 1)

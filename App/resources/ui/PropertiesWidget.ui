@@ -33,19 +33,19 @@ QWidget#PropertiesWidget {
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">
-    <number>70</number>
+    <number>65</number>
    </property>
    <property name="topMargin">
-    <number>70</number>
+    <number>65</number>
    </property>
    <property name="rightMargin">
-    <number>70</number>
+    <number>65</number>
    </property>
    <property name="bottomMargin">
-    <number>70</number>
+    <number>65</number>
    </property>
    <property name="horizontalSpacing">
-    <number>30</number>
+    <number>40</number>
    </property>
    <item row="0" column="0">
     <widget class="QLabel" name="title_label">
@@ -88,7 +88,7 @@ QWidget#PropertiesWidget {
       <bool>false</bool>
      </property>
      <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
      <property name="readOnly">
       <bool>true</bool>
@@ -107,7 +107,7 @@ QWidget#PropertiesWidget {
       <bool>false</bool>
      </property>
      <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
      <property name="readOnly">
       <bool>true</bool>
@@ -152,7 +152,7 @@ QWidget#PropertiesWidget {
       <bool>false</bool>
      </property>
      <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
      <property name="readOnly">
       <bool>true</bool>
@@ -174,7 +174,7 @@ QWidget#PropertiesWidget {
       <bool>false</bool>
      </property>
      <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
      <property name="readOnly">
       <bool>true</bool>
@@ -219,7 +219,7 @@ QWidget#PropertiesWidget {
       <bool>false</bool>
      </property>
      <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
      <property name="readOnly">
       <bool>true</bool>
@@ -238,7 +238,7 @@ QWidget#PropertiesWidget {
       <bool>false</bool>
      </property>
      <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
      <property name="readOnly">
       <bool>true</bool>
@@ -257,7 +257,7 @@ QWidget#PropertiesWidget {
       <bool>false</bool>
      </property>
      <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
      <property name="readOnly">
       <bool>true</bool>
