@@ -3,6 +3,11 @@ import sqlite3
 db_path = 'App/audioplayer.db'
 
 
+class SongException(Exception):
+    """"The song is already on favorites list"""
+    pass
+
+
 class UserDao:
     def __init__(self):
         self.con = sqlite3.connect(db_path)
@@ -25,6 +30,11 @@ class AudiofileDao:
         self.cur = self.con.cursor()
 
     def save(self, user_id, title, author, file_path):
+        query = 'SELECT id, title, author, file_path FROM audiofile WHERE user_id = ? AND file_path = ?'
+        track = self.cur.execute(query, (user_id, file_path)).fetchone()
+        if track is not None:
+            raise SongException
+
         query = 'INSERT INTO audiofile(user_id, title, author, file_path) VALUES (?, ?, ?, ?)'
         try:
             self.cur.execute(query, (user_id, title, author, file_path))

@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QDialog
 from tinytag import TinyTag
 
 from App.image import find_average_color, save_audio_image
-from App.database import AudiofileDao, UserDao
+from App.database import AudiofileDao, UserDao, SongException
 from App.widgets import VolumeWidget, PropertiesWidget, AboutWidget, FavoriteWidget
 
 from App.resources.ui.MainWindow import Ui_MainWindow
@@ -16,6 +16,8 @@ from App.resources.ui.LoginDialog import Ui_LoginDialog
 
 PLAY_ICON = QIcon('App/resources/icons/play.svg')
 PAUSE_ICON = QIcon('App/resources/icons/pause.svg')
+LIKE_ICON = QIcon('App/resources/icons/like.svg')
+DISLIKE_ICON = QIcon('App/resources/icons/dislike.svg')
 DEFAULT_IMAGE_PATH = 'App/resources/default.png'
 TEMP_IMAGE_PATH = 'App/resources/temp.png'
 NO_FILE_ERROR = 'Error: file not selected!'
@@ -39,7 +41,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.player.mediaStatusChanged.connect(self.end_of_media)
         self.main_button.clicked.connect(self.select_func)
         self.like_button.clicked.connect(self.like)
-        self.dislike_button.clicked.connect(self.dislike)
         self.volume_button.clicked.connect(self.open_volume_widget)
         self.playlist_button.clicked.connect(self.open_favorites_widget)
         self.open_file_action.triggered.connect(self.open_file)
@@ -99,17 +100,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.play()
 
     def like(self):
+        """Adds or removes a song from favorites"""
+        cursor = self.cursor
         try:
-            self.audio_dao.save(self.user_id, self.title_label.text(), self.author_label.text(),
-                                self.playlist[self.cursor])
-        except IndexError:
-            pass
-
-    def dislike(self):
-        try:
-            self.audio_dao.delete(self.playlist[self.cursor])
-        except IndexError:
-            pass
+            self.audio_dao.save(self.user_id, self.title_label.text(), self.author_label.text(), self.playlist[cursor])
+            self.like_button.setIcon(DISLIKE_ICON)
+        except SongException:
+            self.audio_dao.delete(self.playlist[cursor])
+            self.like_button.setIcon(LIKE_ICON)
 
     def end_of_media(self):
         current_time = self.current_time_label.text()
@@ -216,6 +214,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.image.pixmap().toImage().save(TEMP_IMAGE_PATH)
         colors = find_average_color(TEMP_IMAGE_PATH)
         self.setStyleSheet(f'background-color: rgb({colors[0]}, {colors[1]}, {colors[2]});')
+
+        # set icon for like button
+        liked_songs = self.audio_dao.get_all(self.user_id)
+        is_liked = False
+
+        for i in liked_songs:
+            if i[3] == file_path:
+                is_liked = True
+                break
+
+        if is_liked:
+            self.like_button.setIcon(DISLIKE_ICON)
+        else:
+            self.like_button.setIcon(LIKE_ICON)
 
     def open_volume_widget(self):
         x = self.x()
