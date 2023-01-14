@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>430</width>
-    <height>328</height>
+    <width>434</width>
+    <height>284</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,9 @@
   <property name="windowIcon">
    <iconset>
     <normaloff>../icons/info_black.svg</normaloff>../icons/info_black.svg</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
   </property>
   <widget class="QLabel" name="logo">
    <property name="geometry">
@@ -33,7 +36,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="title_label">
    <property name="geometry">
     <rect>
      <x>140</x>
@@ -59,7 +62,7 @@
     <string>Shuffle</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="copyright_label">
    <property name="geometry">
     <rect>
      <x>140</x>
@@ -72,7 +75,7 @@
     <string>Copyright (c) 2022 Renat Skosarev</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_4">
+  <widget class="QLabel" name="description_label">
    <property name="geometry">
     <rect>
      <x>140</x>
@@ -85,7 +88,7 @@
     <string>Audio Player</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_5">
+  <widget class="QLabel" name="version_title_label">
    <property name="geometry">
     <rect>
      <x>30</x>
@@ -98,7 +101,7 @@
     <string>Version:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_6">
+  <widget class="QLabel" name="lib_label">
    <property name="geometry">
     <rect>
      <x>30</x>
@@ -111,7 +114,7 @@
     <string>Libraries:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_7">
+  <widget class="QLabel" name="pyqt5_label">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -124,7 +127,7 @@
     <string>• PyQt5</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_8">
+  <widget class="QLabel" name="pillow_label">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -137,7 +140,7 @@
     <string>• Pillow</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_9">
+  <widget class="QLabel" name="tinytag_label">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -153,11 +156,22 @@
   <widget class="QPushButton" name="github_button">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>280</y>
-     <width>391</width>
+     <x>220</x>
+     <y>210</y>
+     <width>181</width>
      <height>28</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{
+background-color: #6240C2;
+border-radius: 10px;
+color: rgb(255, 255, 255);
+}
+
+QPushButton:hover{
+   background-color:#4422A4;
+}</string>
    </property>
    <property name="text">
     <string>GitHub</string>
@@ -168,12 +182,38 @@
     <rect>
      <x>120</x>
      <y>150</y>
-     <width>101</width>
+     <width>51</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="developer_label">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>150</y>
+     <width>171</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Developed by Renat Skosarev</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="designer_label">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>170</y>
+     <width>171</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Designed by Eldar Sayranov</string>
    </property>
   </widget>
  </widget>
