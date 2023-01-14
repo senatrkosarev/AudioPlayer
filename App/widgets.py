@@ -1,6 +1,7 @@
 import webbrowser
 
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtGui
+from PyQt5.QtCore import QRect
 from PyQt5.QtWidgets import QWidget, QTableWidgetItem
 from tinytag import TinyTag
 
@@ -21,6 +22,15 @@ class PropertiesWidget(QWidget, Ui_PropertiesWidget):
 
         self.file_path = file_path
         self.load_properties()
+
+    def paintEvent(self, event):
+        painter = QtGui.QPainter(self)
+        painter.begin(self)
+        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+        painter.setBrush(QtGui.QColor(255, 255, 255))
+        painter.setPen(QtCore.Qt.NoPen)
+        painter.drawRoundedRect(QRect(30, 30, self.width() - 60, self.height() - 60), 30.0, 30.0)
+        painter.end()
 
     def load_properties(self):
         tag = TinyTag.get(self.file_path)
