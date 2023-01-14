@@ -18,21 +18,54 @@ class Ui_FavoriteWidget(object):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("App/resources/icons/like_black.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         FavoriteWidget.setWindowIcon(icon)
+        FavoriteWidget.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.verticalLayout = QtWidgets.QVBoxLayout(FavoriteWidget)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.play_button = QtWidgets.QPushButton(FavoriteWidget)
+        self.play_button.setStyleSheet("QPushButton {\n"
+"    height: 30px;\n"
+"    color: #FFF;\n"
+"    background-color: #6240C2;\n"
+"    border-radius: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #4422A4;\n"
+"}")
         self.play_button.setObjectName("play_button")
         self.horizontalLayout.addWidget(self.play_button)
         self.reload_button = QtWidgets.QPushButton(FavoriteWidget)
+        self.reload_button.setStyleSheet("QPushButton {\n"
+"    height: 30px;\n"
+"    color: #FFF;\n"
+"    background-color: #6240C2;\n"
+"    border-radius: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #4422A4;\n"
+"}")
         self.reload_button.setObjectName("reload_button")
         self.horizontalLayout.addWidget(self.reload_button)
         self.delete_button = QtWidgets.QPushButton(FavoriteWidget)
+        self.delete_button.setStyleSheet("QPushButton {\n"
+"    height: 30px;\n"
+"    color: #FFF;\n"
+"    background-color: #C04141;\n"
+"    border-radius: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #AC2D2D;\n"
+"}")
         self.delete_button.setObjectName("delete_button")
         self.horizontalLayout.addWidget(self.delete_button)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.table = QtWidgets.QTableWidget(FavoriteWidget)
+        self.table.setStyleSheet("background-color: rgb(255, 255, 255);\n"
+"border-color: rgb(98, 64, 194);")
         self.table.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.table.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.table.setColumnCount(2)
@@ -43,6 +76,10 @@ class Ui_FavoriteWidget(object):
 
         self.retranslateUi(FavoriteWidget)
         QtCore.QMetaObject.connectSlotsByName(FavoriteWidget)
+
+        #
+        FavoriteWidget.setFixedSize(634, 586)
+        #
 
     def retranslateUi(self, FavoriteWidget):
         _translate = QtCore.QCoreApplication.translate

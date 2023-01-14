@@ -17,11 +17,26 @@
    <iconset>
     <normaloff>../icons/like_black.svg</normaloff>../icons/like_black.svg</iconset>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="play_button">
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	height: 30px;
+	color: #FFF;
+	background-color: #6240C2;
+	border-radius: 5px;
+}
+
+QPushButton:hover {
+	background-color: #4422A4;
+}</string>
+       </property>
        <property name="text">
         <string>Play</string>
        </property>
@@ -29,6 +44,18 @@
      </item>
      <item>
       <widget class="QPushButton" name="reload_button">
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	height: 30px;
+	color: #FFF;
+	background-color: #6240C2;
+	border-radius: 5px;
+}
+
+QPushButton:hover {
+	background-color: #4422A4;
+}</string>
+       </property>
        <property name="text">
         <string>Reload</string>
        </property>
@@ -36,6 +63,18 @@
      </item>
      <item>
       <widget class="QPushButton" name="delete_button">
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	height: 30px;
+	color: #FFF;
+	background-color: #C04141;
+	border-radius: 5px;
+}
+
+QPushButton:hover {
+	background-color: #AC2D2D;
+}</string>
+       </property>
        <property name="text">
         <string>Delete all</string>
        </property>
@@ -45,6 +84,10 @@
    </item>
    <item>
     <widget class="QTableWidget" name="table">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);
+border-color: rgb(98, 64, 194);</string>
+     </property>
      <property name="verticalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
