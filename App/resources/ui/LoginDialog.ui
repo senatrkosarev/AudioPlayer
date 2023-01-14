@@ -11,18 +11,14 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Shuffle • Auth</string>
+   <string>Auth</string>
   </property>
   <property name="windowIcon">
    <iconset>
     <normaloff>../icons/logo.svg</normaloff>../icons/logo.svg</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(41, 51, 56);
-color: rgb(255, 255, 255);
-hover {
-  background-color: rgb(59, 65, 72);
-}</string>
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="sizeConstraint">
@@ -47,7 +43,7 @@ hover {
       <widget class="QLineEdit" name="login_input">
        <property name="styleSheet">
         <string notr="true">border-radius: 5px;
-border-color: rgb(72, 89, 98);
+border-color: #787878;
 border-width: 2px;
 border-style: solid;
 height: 24px;</string>
@@ -75,7 +71,7 @@ height: 24px;</string>
       <widget class="QLineEdit" name="pass_input">
        <property name="styleSheet">
         <string notr="true">border-radius: 5px;
-border-color: rgb(72, 89, 98);
+border-color: #787878;
 border-width: 2px;
 border-style: solid;
 height: 24px;</string>
@@ -100,11 +96,12 @@ height: 24px;</string>
        <property name="styleSheet">
         <string notr="true">QPushButton {
 	border-radius: 5px;
-	background-color: rgb(72, 89, 98);
+	color: rgb(255, 255, 255);
+	background-color: #282828;
 	height: 30px;
 }
 QPushButton:hover {
-	background-color: rgb(103, 128, 140);
+	background-color: #000000;
 }
 QPushButton:onclick {
 	background-color: rgb(56, 70, 77);
@@ -129,14 +126,12 @@ QPushButton:onclick {
        <property name="styleSheet">
         <string notr="true">QPushButton {
 	border-radius: 5px;
-	background-color: rgb(72, 89, 98);
+	background-color:#6240C2;
+	color: rgb(255, 255, 255);
 	height: 30px;
 }
 QPushButton:hover {
-	background-color: rgb(103, 128, 140);
-}
-QPushButton:onclick {
-	background-color: rgb(56, 70, 77);
+	background-color: #4422A4;
 }</string>
        </property>
        <property name="text">

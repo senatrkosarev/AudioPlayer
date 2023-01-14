@@ -18,11 +18,7 @@ class Ui_LoginDialog(object):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("App/resources/icons/logo.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         LoginDialog.setWindowIcon(icon)
-        LoginDialog.setStyleSheet("background-color: rgb(41, 51, 56);\n"
-"color: rgb(255, 255, 255);\n"
-"hover {\n"
-"  background-color: rgb(59, 65, 72);\n"
-"}")
+        LoginDialog.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.verticalLayout = QtWidgets.QVBoxLayout(LoginDialog)
         self.verticalLayout.setSizeConstraint(QtWidgets.QLayout.SetMinAndMaxSize)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -34,7 +30,7 @@ class Ui_LoginDialog(object):
         self.horizontalLayout.addWidget(self.login_label)
         self.login_input = QtWidgets.QLineEdit(LoginDialog)
         self.login_input.setStyleSheet("border-radius: 5px;\n"
-"border-color: rgb(72, 89, 98);\n"
+"border-color: #787878;\n"
 "border-width: 2px;\n"
 "border-style: solid;\n"
 "height: 24px;")
@@ -49,7 +45,7 @@ class Ui_LoginDialog(object):
         self.horizontalLayout_2.addWidget(self.pass_label)
         self.pass_input = QtWidgets.QLineEdit(LoginDialog)
         self.pass_input.setStyleSheet("border-radius: 5px;\n"
-"border-color: rgb(72, 89, 98);\n"
+"border-color: #787878;\n"
 "border-width: 2px;\n"
 "border-style: solid;\n"
 "height: 24px;")
@@ -67,11 +63,12 @@ class Ui_LoginDialog(object):
         self.reg_button.setSizePolicy(sizePolicy)
         self.reg_button.setStyleSheet("QPushButton {\n"
 "    border-radius: 5px;\n"
-"    background-color: rgb(72, 89, 98);\n"
+"    color: rgb(255, 255, 255);\n"
+"    background-color: #282828;\n"
 "    height: 30px;\n"
 "}\n"
 "QPushButton:hover {\n"
-"    background-color: rgb(103, 128, 140);\n"
+"    background-color: #000000;\n"
 "}\n"
 "QPushButton:onclick {\n"
 "    background-color: rgb(56, 70, 77);\n"
@@ -87,14 +84,12 @@ class Ui_LoginDialog(object):
         self.log_in_button.setSizePolicy(sizePolicy)
         self.log_in_button.setStyleSheet("QPushButton {\n"
 "    border-radius: 5px;\n"
-"    background-color: rgb(72, 89, 98);\n"
+"    background-color:#6240C2;\n"
+"    color: rgb(255, 255, 255);\n"
 "    height: 30px;\n"
 "}\n"
 "QPushButton:hover {\n"
-"    background-color: rgb(103, 128, 140);\n"
-"}\n"
-"QPushButton:onclick {\n"
-"    background-color: rgb(56, 70, 77);\n"
+"    background-color: #4422A4;\n"
 "}")
         self.log_in_button.setAutoDefault(False)
         self.log_in_button.setDefault(True)
@@ -121,7 +116,7 @@ class Ui_LoginDialog(object):
 
     def retranslateUi(self, LoginDialog):
         _translate = QtCore.QCoreApplication.translate
-        LoginDialog.setWindowTitle(_translate("LoginDialog", "Shuffle • Auth"))
+        LoginDialog.setWindowTitle(_translate("LoginDialog", "Auth"))
         self.login_label.setText(_translate("LoginDialog", "Login"))
         self.pass_label.setText(_translate("LoginDialog", "Password"))
         self.reg_button.setText(_translate("LoginDialog", "Register"))
