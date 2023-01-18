@@ -23,4 +23,5 @@ def find_average_color(image_path: str):
 
 def save_audio_image(image: str):
     img = Image.open(io.BytesIO(image))
+    img = img.resize((340, 340))
     img.save('App/resources/temp.png')

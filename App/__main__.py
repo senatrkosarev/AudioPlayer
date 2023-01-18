@@ -46,11 +46,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.open_file_action.triggered.connect(self.open_file)
         self.open_folder_action.triggered.connect(self.open_folder)
         self.properties_action.triggered.connect(self.open_properties_widget)
-        self.support_action.triggered.connect(lambda: webbrowser.open('https://skosarex.t.me'))
+        self.support_action.triggered.connect(lambda: webbrowser.open('https://skosarevv.t.me'))
         self.about_action.triggered.connect(self.open_about_widget)
         self.next_button.clicked.connect(self.next)
         self.prev_button.clicked.connect(self.previous)
         self.song_slider.sliderReleased.connect(self.slider_released)
+
+        self.effects_button.clicked.connect(lambda: self.setWindowTitle(f'{self.width()} {self.height()}'))
+        self.setFixedSize(450, 750)
 
     def select_func(self):
         """Selects the desired function: play, pause or resume"""
