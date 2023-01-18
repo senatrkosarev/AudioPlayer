@@ -51,8 +51,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.next_button.clicked.connect(self.next)
         self.prev_button.clicked.connect(self.previous)
         self.song_slider.sliderReleased.connect(self.slider_released)
-
-        self.effects_button.clicked.connect(lambda: self.setWindowTitle(f'{self.width()} {self.height()}'))
         self.setFixedSize(450, 750)
 
     def select_func(self):

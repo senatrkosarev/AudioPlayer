@@ -85,5 +85,5 @@ class Ui_FavoriteWidget(object):
         _translate = QtCore.QCoreApplication.translate
         FavoriteWidget.setWindowTitle(_translate("FavoriteWidget", "Favorite music"))
         self.play_button.setText(_translate("FavoriteWidget", "Play"))
-        self.reload_button.setText(_translate("FavoriteWidget", "Reload"))
+        self.reload_button.setText(_translate("FavoriteWidget", "Update"))
         self.delete_button.setText(_translate("FavoriteWidget", "Delete all"))
