@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_LoginDialog(object):
     def setupUi(self, LoginDialog):
         LoginDialog.setObjectName("LoginDialog")
-        LoginDialog.resize(379, 151)
+        LoginDialog.resize(443, 189)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("App/resources/icons/logo.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         LoginDialog.setWindowIcon(icon)
@@ -23,12 +23,20 @@ class Ui_LoginDialog(object):
         self.verticalLayout.setSizeConstraint(QtWidgets.QLayout.SetMinAndMaxSize)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setSpacing(14)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.login_label = QtWidgets.QLabel(LoginDialog)
         self.login_label.setMinimumSize(QtCore.QSize(70, 0))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.login_label.setFont(font)
         self.login_label.setObjectName("login_label")
         self.horizontalLayout.addWidget(self.login_label)
         self.login_input = QtWidgets.QLineEdit(LoginDialog)
+        self.login_input.setMinimumSize(QtCore.QSize(0, 35))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.login_input.setFont(font)
         self.login_input.setStyleSheet("border-radius: 5px;\n"
 "border-color: #787878;\n"
 "border-width: 2px;\n"
@@ -38,12 +46,20 @@ class Ui_LoginDialog(object):
         self.horizontalLayout.addWidget(self.login_input)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setSpacing(10)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.pass_label = QtWidgets.QLabel(LoginDialog)
         self.pass_label.setMinimumSize(QtCore.QSize(70, 0))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.pass_label.setFont(font)
         self.pass_label.setObjectName("pass_label")
         self.horizontalLayout_2.addWidget(self.pass_label)
         self.pass_input = QtWidgets.QLineEdit(LoginDialog)
+        self.pass_input.setMinimumSize(QtCore.QSize(0, 35))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.pass_input.setFont(font)
         self.pass_input.setStyleSheet("border-radius: 5px;\n"
 "border-color: #787878;\n"
 "border-width: 2px;\n"
@@ -61,6 +77,10 @@ class Ui_LoginDialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.reg_button.sizePolicy().hasHeightForWidth())
         self.reg_button.setSizePolicy(sizePolicy)
+        self.reg_button.setMinimumSize(QtCore.QSize(0, 35))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.reg_button.setFont(font)
         self.reg_button.setStyleSheet("QPushButton {\n"
 "    border-radius: 5px;\n"
 "    color: rgb(255, 255, 255);\n"
@@ -82,6 +102,10 @@ class Ui_LoginDialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.log_in_button.sizePolicy().hasHeightForWidth())
         self.log_in_button.setSizePolicy(sizePolicy)
+        self.log_in_button.setMinimumSize(QtCore.QSize(0, 35))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.log_in_button.setFont(font)
         self.log_in_button.setStyleSheet("QPushButton {\n"
 "    border-radius: 5px;\n"
 "    background-color:#6240C2;\n"
@@ -102,6 +126,9 @@ class Ui_LoginDialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.error_label.sizePolicy().hasHeightForWidth())
         self.error_label.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.error_label.setFont(font)
         self.error_label.setStyleSheet("color: rgb(255, 0, 0);")
         self.error_label.setAlignment(QtCore.Qt.AlignCenter)
         self.error_label.setObjectName("error_label")
