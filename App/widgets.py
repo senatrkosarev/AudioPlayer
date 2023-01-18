@@ -77,7 +77,7 @@ class AboutWidget(QWidget, Ui_AboutWidget):
         self.setupUi(self)
 
         self.version_label.setText(__version__)
-        self.github_button.clicked.connect(lambda: webbrowser.open('https://github.com/skosarex/AudioPlayer'))
+        self.github_button.clicked.connect(lambda: webbrowser.open('https://github.com/skosarevv/AudioPlayer'))
 
 
 class FavoriteWidget(QWidget, Ui_FavoriteWidget):
