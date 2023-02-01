@@ -68,7 +68,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.resume()
 
     def play(self):
-        url = QtCore.QUrl(self.playlist[self.cursor])
+        url = QtCore.QUrl.fromLocalFile(self.playlist[self.cursor])
         self.player.setMedia(QMediaContent(url))
         self.main_button.setIcon(PAUSE_ICON)
         self.player.play()
